@@ -1,0 +1,154 @@
+{
+	"google": {
+		"name": "Google",
+		"description": "Google's AI models from Google AI Studio.",
+		"icon": "/icons/google.png",
+		"models": [
+			{
+				"name": "Gemini 2.5 Pro",
+				"id": "gemini-2.5-pro-preview-05-06",
+				"type": "chat",
+				"price_per_1m_tokens": 15.0,
+				"available": true,
+				"experimental": true
+			},
+			{
+				"name": "Gemini 2.5 Flash Thinking",
+				"id": "gemini-2.5-flash-preview-04-17",
+				"type": "chat",
+				"price_per_1m_tokens": 3.5,
+				"available": true,
+				"experimental": true,
+				"free_tier": true
+			},
+			{
+				"name": "Gemini 2.0 Flash",
+				"id": "gemini-2.0-flash",
+				"type": "chat",
+				"price_per_1m_tokens": 0.4,
+				"available": true,
+				"free_tier": true
+			},
+			{
+				"name": "Gemini 2.0 Flash Lite",
+				"id": "gemini-2.0-flash-lite",
+				"type": "chat",
+				"price_per_1m_tokens": 0.3,
+				"available": true,
+				"free_tier": true
+			}
+		]
+	},
+	"xai": {
+		"name": "xAI",
+		"description": "xAI's Grok models, as seen on X.",
+		"icon": "/icons/xai.jpeg",
+		"models": [
+			{
+				"name": "Grok 3",
+				"id": "grok-3",
+				"type": "chat",
+				"price_per_1m_tokens": 15.0,
+				"available": true,
+				"experimental": true
+			},
+			{
+				"name": "Grok 3 Mini",
+				"id": "grok-3-mini",
+				"type": "chat",
+				"price_per_1m_tokens": 0.5,
+				"available": true,
+				"experimental": true,
+				"free_tier": true
+			}
+		]
+	},
+	"openai": {
+		"name": "OpenAI",
+		"description": "OpenAI's AI models from OpenAI API.",
+		"icon": "/icons/openai.png",
+		"models": [
+			{
+				"name": "GPT-4.1",
+				"id": "gpt-4.1",
+				"type": "chat",
+				"price_per_1m_tokens": 8.0,
+				"available": true
+			},
+			{
+				"name": "GPT-4.1 Mini",
+				"id": "gpt-4.1-mini",
+				"type": "chat",
+				"price_per_1m_tokens": 1.6,
+				"available": true
+			},
+			{
+				"name": "GPT-4.1 Nano",
+				"id": "gpt-4.1-nano",
+				"type": "chat",
+				"price_per_1m_tokens": 0.4,
+				"available": true
+			},
+			{
+				"name": "GPT-4o",
+				"id": "gpt-4o",
+				"type": "chat",
+				"price_per_1m_tokens": 10.0,
+				"available": true
+			},
+			{
+				"name": "GPT-4o Mini",
+				"id": "gpt-4o-mini",
+				"type": "chat",
+				"price_per_1m_tokens": 0.6,
+				"available": true
+			},
+			{
+				"name": "o1",
+				"id": "o1",
+				"type": "chat",
+				"price_per_1m_tokens": 60.0,
+				"available": true
+			},
+			{
+				"name": "o3",
+				"id": "o3",
+				"type": "chat",
+				"price_per_1m_tokens": 40.0,
+				"available": true
+			},
+			{
+				"name": "o4 Mini",
+				"id": "o4-mini",
+				"type": "chat",
+				"price_per_1m_tokens": 4.4,
+				"available": true
+			}
+		]
+	},
+	"groq": {
+		"name": "Groq",
+		"description": "Fast AI inference for various open models.",
+		"icon": "/icons/groq.png",
+		"models": [
+			{
+				"name": "DeepSeek-R1-Distill-Llama-70B",
+				"id": "deepseek-r1-distill-llama-70b",
+				"type": "chat",
+				"price_per_1m_tokens": 1.0,
+				"available": true,
+				"experimental": true,
+				"free_tier": true
+			},
+			{
+				"name": "Qwen QwQ 32B",
+				"id": "qwen-qwq-32b",
+				"type": "chat",
+				"price_per_1m_tokens": 0.4,
+				"available": true,
+				"experimental": true,
+				"free_tier": true
+			}
+		]
+	}
+}
