@@ -1,0 +1,24 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.5.1/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true
+		},
+		"ignore": [".next/", "out/", ".wrangler/", ".open-next/"]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentWidth": 4,
+		"indentStyle": "tab",
+		"ignore": [".next/", "out/", ".wrangler/", ".open-next/"]
+	},
+	"javascript": {
+		"formatter": {
+			"bracketSpacing": true
+		}
+	}
+}
