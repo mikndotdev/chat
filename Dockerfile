@@ -1,6 +1,8 @@
 FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
 
+ENV LOGTO_COOKIE_SECRET="placeholder"
+
 FROM base AS install
 RUN mkdir -p /temp/dev
 COPY package.json bun.lock /temp/dev/
