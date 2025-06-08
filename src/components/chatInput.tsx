@@ -56,7 +56,9 @@ export const ChatInput = ({
 					message: { content: message, role: "user" },
 					id: chatId!,
 				});
-				handleSubmit(e);
+				if (handleSubmit) {
+					handleSubmit(e);
+				}
 			}
 		}
 	};
