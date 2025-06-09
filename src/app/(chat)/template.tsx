@@ -8,6 +8,7 @@ import { getLogtoContext } from "@logto/next/server-actions";
 import { logtoConfig } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import * as React from "react";
+import {redirect} from "next/navigation";
 
 export default async function ChatLayout({
 	children,
@@ -15,6 +16,10 @@ export default async function ChatLayout({
 	children: React.ReactNode;
 }) {
 	const { claims } = await getLogtoContext(logtoConfig);
+
+	if (!claims) {
+		await redirect("/login");
+	}
 
 	const account = await prisma.user.findUnique({
 		where: { id: claims?.sub },

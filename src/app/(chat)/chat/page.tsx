@@ -9,10 +9,6 @@ import models from "@/consts/models.json";
 export default async function Home() {
 	const { claims } = await getLogtoContext(logtoConfig);
 
-	if (!claims) {
-		await redirect("/login");
-	}
-
 	const userKeys = await prisma.apiKey.findMany({
 		where: { userId: claims?.sub || "" },
 	});
