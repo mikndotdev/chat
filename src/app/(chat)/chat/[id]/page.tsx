@@ -83,7 +83,6 @@ export default async function Home({
 					avatar={claims?.picture || ""}
 					initialMessages={messages as Message[]}
 					model={chat.model}
-					// Pass models if needed
 				/>
 			</div>
 		</main>

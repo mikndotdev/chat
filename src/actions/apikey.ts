@@ -17,6 +17,12 @@ export async function setApiKey({
 		throw new Error("User not authenticated");
 	}
 
+	const user = await prisma.user.findUnique({ where: { id: claims?.sub } });
+
+	if (!user) {
+		await prisma.user.create({ data: { id: claims?.sub } });
+	}
+
 	const existingKey = await prisma.apiKey.findFirst({
 		where: {
 			userId: claims.sub,

@@ -15,6 +15,19 @@ export default async function ChatLayout({
 	children: React.ReactNode;
 }) {
 	const { claims } = await getLogtoContext(logtoConfig);
+
+	const account = await prisma.user.findUnique({
+		where: { id: claims?.sub },
+	});
+
+	if (!account) {
+		await prisma.user.create({
+			data: {
+				id: claims?.sub,
+			},
+		});
+	}
+
 	const chats = await prisma.chat.findMany({
 		where: { userId: claims?.sub || "" },
 		orderBy: {

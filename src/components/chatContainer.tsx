@@ -21,22 +21,29 @@ export const ChatContainer = ({
 	model,
 	models,
 }: ChatContainerProps) => {
-	const { messages, handleInputChange, handleSubmit, append, input } =
-		useChat({
-			id,
-			initialMessages,
-			api: `/api/chat?id=${id}`,
-			onFinish: async (message) => {
-				if (!id) return;
-				await addMessage({ message, id });
-			},
-		});
+	const {
+		messages,
+		handleInputChange,
+		handleSubmit,
+		append,
+		input,
+		setMessages,
+	} = useChat({
+		id,
+		initialMessages,
+		api: `/api/chat?id=${id}`,
+		onFinish: async (message) => {
+			if (!id) return;
+			await addMessage({ message, id });
+		},
+	});
 
 	useEffect(() => {
 		if (!initialMessages?.length) return;
 		const lastMsg = initialMessages[initialMessages.length - 1];
 		if (lastMsg.role === "user") {
 			if (lastMsg.content) {
+				setMessages([]);
 				append({ role: "user", content: lastMsg.content });
 			}
 		}

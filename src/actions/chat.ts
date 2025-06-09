@@ -3,7 +3,6 @@
 import { getLogtoContext } from "@logto/next/server-actions";
 import { logtoConfig } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Message } from "@ai-sdk/react";
 
 import Models from "@/consts/models.json";
 
@@ -50,7 +49,10 @@ export const addMessage = async ({
 	message,
 	id,
 }: {
-	message: { content: string; role: "user" | "assistant" | "system" | "data" };
+	message: {
+		content: string;
+		role: "user" | "assistant" | "system" | "data";
+	};
 	id: string;
 }) => {
 	const { claims } = await getLogtoContext(logtoConfig);
