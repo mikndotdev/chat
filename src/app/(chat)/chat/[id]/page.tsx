@@ -6,6 +6,7 @@ import { Message } from "@ai-sdk/react";
 import Models from "@/consts/models.json";
 import * as React from "react";
 import { ChatContainer } from "@/components/chatContainer";
+import { ChatMeta } from "@/components/chatMeta";
 
 const ModelInfoFromID: Record<string, { name: string; description: string }> =
 	Object.entries(Models)
@@ -72,10 +73,7 @@ export default async function Home({
 				<p>
 					<strong>Model:</strong> {modelInfo?.name || "Unknown Model"}
 				</p>
-				<p>
-					<strong>Created At:</strong>{" "}
-					{new Date(chat.createdAt).toLocaleString()}
-				</p>
+				<ChatMeta createdAt={chat.createdAt.toISOString()} />
 			</div>
 			<div className="space-y-4">
 				<ChatContainer

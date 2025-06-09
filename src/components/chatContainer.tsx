@@ -4,8 +4,6 @@ import { ChatPage } from "./chat";
 import { ChatInput } from "./chatInput";
 import { useEffect } from "react";
 
-import { addMessage } from "@/actions/chat";
-
 interface ChatContainerProps {
 	id: string;
 	avatar: string;
@@ -28,17 +26,18 @@ export const ChatContainer = ({
 		append,
 		input,
 		setMessages,
+		experimental_resume,
+		status,
 	} = useChat({
 		id,
 		initialMessages,
-		api: `/api/chat?id=${id}`,
-		onFinish: async (message) => {
-			if (!id) return;
-			await addMessage({ message, id });
-		},
+		headers: {
+			"X-Chat-Id": id,
+		}
 	});
 
 	useEffect(() => {
+		experimental_resume();
 		if (!initialMessages?.length) return;
 		const lastMsg = initialMessages[initialMessages.length - 1];
 		if (lastMsg.role === "user") {
@@ -60,6 +59,7 @@ export const ChatContainer = ({
 					input={input}
 					handleInputChange={handleInputChange}
 					handleSubmit={handleSubmit}
+					status={status}
 				/>
 			</div>
 		</>

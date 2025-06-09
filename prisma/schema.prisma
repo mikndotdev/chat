@@ -73,3 +73,9 @@ model ApiKey {
   User       User?   @relation(fields: [userId], references: [id])
   userId     String?
 }
+
+model Stream {
+  id       String @id @default(cuid())
+  chatId   String @default("null")
+  streamId String
+}

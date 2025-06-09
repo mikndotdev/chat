@@ -1,14 +1,19 @@
 "use client";
 import AIIcon from "@/assets/img/ai.png";
 import { Message } from "@ai-sdk/react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface ChatProps {
 	id: string;
 	avatar: string;
+	status?: "submitted" | "streaming" | "ready" | "error";
 	msg: Message[];
 }
 
-export const ChatPage = ({ id, msg, avatar }: ChatProps) => {
+export const ChatPage = ({ id, msg, avatar, status }: ChatProps) => {
 	return (
 		<div>
 			<div className="mb-24">
@@ -33,9 +38,61 @@ export const ChatPage = ({ id, msg, avatar }: ChatProps) => {
 										return (
 											<div
 												key={`${msg.id}-${i}`}
-												className="whitespace-pre-line"
+												className="leading-relaxed"
 											>
-												{part.text}
+												<ReactMarkdown
+													remarkPlugins={[remarkGfm]}
+													components={{
+														p: ({ children }) => (
+															<div className="mb-2">
+																{children}
+															</div>
+														),
+														code({
+															node,
+															inline,
+															className,
+															children,
+															...props
+														}) {
+															const match =
+																/language-(\w+)/.exec(
+																	className ||
+																		"",
+																);
+															return !inline ? (
+																<SyntaxHighlighter
+																	style={
+																		oneDark
+																	}
+																	language={
+																		match?.[1] ||
+																		"plaintext"
+																	}
+																	PreTag="div"
+																	className="rounded-md my-2 p-3 bg-gray-900 text-sm"
+																	{...props}
+																>
+																	{String(
+																		children,
+																	).replace(
+																		/\n$/,
+																		"",
+																	)}
+																</SyntaxHighlighter>
+															) : (
+																<code
+																	className="bg-gray-200 rounded px-1 py-0.5"
+																	{...props}
+																>
+																	{children}
+																</code>
+															);
+														},
+													}}
+												>
+													{part.text}
+												</ReactMarkdown>
 											</div>
 										);
 								}

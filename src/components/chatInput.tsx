@@ -9,6 +9,7 @@ import { startChat, addMessage } from "@/actions/chat";
 interface ChatInputProps {
 	id?: string;
 	model?: string;
+	status?: "submitted" | "streaming" | "ready" | "error";
 	models?: {
 		name: string;
 		id: string;
@@ -27,6 +28,7 @@ export const ChatInput = ({
 	input,
 	handleInputChange,
 	handleSubmit,
+	status,
 }: ChatInputProps) => {
 	const pathname = usePathname();
 	const router = useRouter();
@@ -44,6 +46,10 @@ export const ChatInput = ({
 		e.preventDefault();
 		const message = inputEl.value.trim();
 		if (!isInChat) {
+			if (!message) {
+				toast.error("Please enter a message before starting a chat.");
+				return;
+			}
 			const chat = await startChat({
 				model: selectedModel,
 				message,
@@ -151,7 +157,11 @@ export const ChatInput = ({
 							<Bot className="text-white" />
 						</button>
 					)}
-					<button className="btn btn-secondary" type="submit">
+					<button
+						className="btn btn-secondary"
+						type="submit"
+						disabled={(status !== "ready" && status !== "error")}
+					>
 						<Send className="text-white" />
 					</button>
 				</form>
