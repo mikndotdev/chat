@@ -1,10 +1,12 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Globe, Send, Paperclip, ChevronDown, Bot } from "lucide-react";
+import { Send, Paperclip, Bot, X } from "lucide-react";
 import { useState, FormEvent } from "react";
 import { toast } from "sonner";
 import { startChat, addMessage } from "@/actions/chat";
+import { addAttachment } from "@/actions/upload";
+import { Attachment } from "@ai-sdk/ui-utils";
 
 interface ChatInputProps {
 	id?: string;
@@ -37,6 +39,9 @@ export const ChatInput = ({
 	const pathname = usePathname();
 	const router = useRouter();
 	const [selectedModel, setSelectedModel] = useState(model);
+	const [attachment, setAttachment] = useState<File | null>(null);
+	const [attachmentUrl, setAttachmentUrl] = useState("");
+	const [uploading, setUploading] = useState(false);
 	const [open, setOpen] = useState(false);
 
 	const chatId = pathname.startsWith("/chat/")
@@ -65,12 +70,15 @@ export const ChatInput = ({
 			await router.push(`/chat/${chat.id}`);
 		} else {
 			if (isInChat) {
-				addMessage({
-					message: { content: message, role: "user" },
-					id: chatId!,
-				});
-				if (handleSubmit) {
-					handleSubmit(e);
+				if (attachment) {
+					// @ts-ignore
+					handleSubmit(e, {
+						experimental_attachments: [{ name: attachment.name, contentType: attachment.type, url: attachmentUrl }] as Attachment[],
+					});
+				} else {
+					if (handleSubmit) {
+						handleSubmit(e);
+					}
 				}
 			}
 		}
@@ -153,7 +161,54 @@ export const ChatInput = ({
 				)}
 			</dialog>
 			<div className="flex flex-row items-center space-x-3 w-full">
-				<Paperclip className="text-gray-400" />
+				{attachment && !uploading ? (
+					<div className="flex items-center space-x-2">
+						{attachment.type.startsWith("image/") ? (
+							<img
+								src={attachmentUrl}
+								alt="Attachment"
+								className="w-12 h-12 rounded-lg object-cover"
+							/>
+						) : attachment.type.startsWith("application/pdf") ? (
+							<div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded-lg">
+								<span className="text-gray-500">PDF</span>
+							</div>
+						) : null}
+						<X onClick={() => setAttachment(null)} />
+					</div>
+				) : uploading ? (
+					<span className="loading loading-spinner loading-lg" />
+				) : (
+					<button
+						className="btn btn-ghost"
+						onClick={() => {
+							const input = document.createElement("input");
+							input.type = "file";
+							input.accept = "image/*,application/pdf";
+							input.onchange = async (e) => {
+								const file = (e.target as HTMLInputElement).files?.[0];
+								if (file) {
+									setAttachment(file);
+									if (chatId) {
+										setUploading(true);
+										const formData = new FormData();
+										formData.append("file", file);
+										const upload = await addAttachment(formData, chatId);
+										setAttachmentUrl(upload.url);
+										setUploading(false);
+										toast.success("Attachment added successfully!");
+									} else {
+										setAttachment(null)
+										toast.error("Please start a chat first.");
+									}
+								}
+							};
+							input.click();
+						}}
+					>
+						<Paperclip />
+					</button>
+				)}
 				<form
 					className={"flex flex-row items-center space-x-3 w-full"}
 					onSubmit={sendMessage}

@@ -15,35 +15,36 @@ datasource db {
 }
 
 model User {
-  id        String           @id @default(cuid())
-  chats     Chat[]
-  providers CustomProvider[]
-  files     Attachment[]
-  apiKeys   ApiKey[]
-}
-
-model Message {
-  id          String       @id @default(cuid())
-  content     String
-  createdAt   DateTime     @default(now())
-  userId      String
-  Chat        Chat?        @relation(fields: [chatId], references: [id])
-  chatId      String?
-  public      Boolean      @default(false)
-  loading     Boolean      @default(true)
-  role        String       @default("user")
+  id          String           @id @default(cuid())
+  chats       Chat[]
+  providers   CustomProvider[]
+  apiKeys     ApiKey[]
+  files       File[]
   attachments Attachment[]
 }
 
-model Chat {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
   userId    String
-  name      String?
-  messages  Message[]
-  model     String
-  public    Boolean   @default(false)
-  User      User      @relation(fields: [userId], references: [id])
+  Chat      Chat?    @relation(fields: [chatId], references: [id])
+  chatId    String?
+  public    Boolean  @default(false)
+  loading   Boolean  @default(true)
+  role      String   @default("user")
+}
+
+model Chat {
+  id          String       @id @default(cuid())
+  createdAt   DateTime     @default(now())
+  userId      String
+  name        String?
+  messages    Message[]
+  model       String
+  public      Boolean      @default(false)
+  User        User         @relation(fields: [userId], references: [id])
+  attachments Attachment[]
 }
 
 model CustomProvider {
@@ -58,12 +59,12 @@ model CustomProvider {
 
 model Attachment {
   id        String   @id @default(cuid())
+  userId    String
   url       String
   createdAt DateTime @default(now())
-  messageId String
-  userId    String
-  Message   Message  @relation(fields: [messageId], references: [id])
-  User      User     @relation(fields: [userId], references: [id])
+  chatId    String
+  chat      Chat?    @relation(fields: [chatId], references: [id])
+  User      User?    @relation(fields: [userId], references: [id])
 }
 
 model ApiKey {
@@ -78,4 +79,12 @@ model Stream {
   id       String @id @default(cuid())
   chatId   String @default("null")
   streamId String
+}
+
+model File {
+  id        String   @id @default(cuid())
+  userId    String
+  url       String
+  createdAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id])
 }
