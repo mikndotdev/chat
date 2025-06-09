@@ -26,11 +26,19 @@ export const ChatPage = ({ id, msg, avatar, status }: ChatProps) => {
 							src={
 								msg.role === "user"
 									? avatar || AIIcon.src
-									: AIIcon.src
+									: status === "streaming"
+										? undefined
+										: AIIcon.src
 							}
 							alt="Avatar"
 							className="w-auto h-8 rounded-full mr-3"
+							style={{ display: msg.role != "user" && status === "streaming" ? "none" : undefined }}
 						/>
+						{msg.role != "user" && status === "streaming" && (
+							<div className="w-8 h-8 flex items-center justify-center mr-3">
+								<span className={"loading loading-spinner loading-lg"}/>
+							</div>
+						)}
 						<div className="flex flex-col">
 							{msg?.parts?.map((part, i) => {
 								switch (part.type) {

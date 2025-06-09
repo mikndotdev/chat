@@ -142,4 +142,6 @@ export async function GET(req: NextRequest) {
 	if (stream) {
 		return new Response(stream, { status: 200 });
 	}
+
+	return new Response("Stream not found or expired.", { status: 404 });
 }
