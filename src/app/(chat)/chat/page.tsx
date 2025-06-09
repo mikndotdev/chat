@@ -40,7 +40,7 @@ export default async function Home() {
 				</p>
 			</div>
 			<div className={"flex items-center justify-center"}>
-				<ChatInput models={availableModels} status={"ready"}/>
+				<ChatInput models={availableModels} status={"ready"} />
 			</div>
 		</main>
 	);

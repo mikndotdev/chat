@@ -33,7 +33,7 @@ export const ChatContainer = ({
 		initialMessages,
 		headers: {
 			"X-Chat-Id": id,
-		}
+		},
 	});
 
 	useEffect(() => {

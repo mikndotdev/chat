@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
 				},
 				id,
 			});
-			await prisma.stream.delete({
+			await prisma.stream.deleteMany({
 				where: { streamId: streamId },
 			});
 		},

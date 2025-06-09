@@ -50,6 +50,7 @@ export const ChatPage = ({ id, msg, avatar, status }: ChatProps) => {
 														),
 														code({
 															node,
+															// @ts-ignore
 															inline,
 															className,
 															children,
@@ -62,6 +63,7 @@ export const ChatPage = ({ id, msg, avatar, status }: ChatProps) => {
 																);
 															return !inline ? (
 																<SyntaxHighlighter
+																	/* @ts-ignore */
 																	style={
 																		oneDark
 																	}

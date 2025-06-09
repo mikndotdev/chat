@@ -160,7 +160,7 @@ export const ChatInput = ({
 					<button
 						className="btn btn-secondary"
 						type="submit"
-						disabled={(status !== "ready" && status !== "error")}
+						disabled={status !== "ready" && status !== "error"}
 					>
 						<Send className="text-white" />
 					</button>
