@@ -75,6 +75,7 @@ export const ChatInput = ({
 					handleSubmit(e, {
 						experimental_attachments: [{ name: attachment.name, contentType: attachment.type, url: attachmentUrl }] as Attachment[],
 					});
+					setAttachment(null);
 				} else {
 					if (handleSubmit) {
 						handleSubmit(e);
@@ -188,6 +189,9 @@ export const ChatInput = ({
 							input.onchange = async (e) => {
 								const file = (e.target as HTMLInputElement).files?.[0];
 								if (file) {
+									if( file.size > 8 * 1024 * 1024) {
+										return toast.error("File size exceeds 8MB limit.");
+									}
 									setAttachment(file);
 									if (chatId) {
 										setUploading(true);

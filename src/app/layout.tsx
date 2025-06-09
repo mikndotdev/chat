@@ -20,7 +20,7 @@ export default async function Layout({ children }: LocaleLayoutProps) {
 		<html className={hsr.className}>
 			<body>
 				{children}
-				<Toaster richColors />
+				<Toaster richColors position={"top-center"}/>
 			</body>
 		</html>
 	);
