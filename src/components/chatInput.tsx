@@ -12,9 +12,13 @@ interface ChatInputProps {
 	status?: "submitted" | "streaming" | "ready" | "error";
 	models?: {
 		name: string;
+		description: string;
 		id: string;
 		icon: string;
 		provider: string;
+		providerName: string;
+		freeTier: boolean;
+		experimental: boolean;
 	}[];
 	input?: string;
 	handleInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -41,10 +45,13 @@ export const ChatInput = ({
 	const isInChat = Boolean(chatId);
 
 	const sendMessage = async (e: FormEvent) => {
+		e.preventDefault();
 		const inputEl = e.currentTarget.querySelector("input");
 		if (!inputEl || !selectedModel) return;
-		e.preventDefault();
 		const message = inputEl.value.trim();
+		if (!message) {
+			return;
+		}
 		if (!isInChat) {
 			if (!message) {
 				toast.error("Please enter a message before starting a chat.");
@@ -73,30 +80,45 @@ export const ChatInput = ({
 		<div className="flex items-center justify-center p-4 bg-neutral rounded-lg fixed bottom-5 w-full max-w-10/13 shadow-lg">
 			<dialog className={"modal"} open={open}>
 				{models && models.length > 0 ? (
-					<div className="modal-box">
-						<h3 className="font-bold text-lg">Select a Model</h3>
+					<div className="modal-box min-w-1/2 max-w-1/2 max-h-3/4 overflow-y-auto">
+						<h3 className="font-bold text-lg text-center">Select a Model</h3>
 						<div className="py-4">
+							<div className={"grid grid-cols-2 gap-2"}>
 							{models.map((model) => (
-								<button
+								<div
 									key={model.id}
-									className={`btn btn-secondary w-full mb-2 flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
+									className={`card bg-secondary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
 									onClick={() => {
 										setSelectedModel(model.name);
 										setOpen(false);
 									}}
 								>
+									<div className={"card-body p-3 justify-left w-full"}>
+									<div className={"card-title flex flex-row justify-center items-center space-x-2"}>
 									<img
 										src={model.icon}
 										alt={model.provider}
-										className="w-6 h-6 rounded-full"
+										className="w-8 h-8 rounded-full"
 									/>
-									<span>
-										{model.provider} {model.name}
+									<span className={"font-semibold text-md text-neutral"}>
+										{model.providerName} {model.name}
 									</span>
-								</button>
+									</div>
+									<p className={"text-sm text-black"}>{model.description}</p>
+									</div>
+									<div className="justify-center mb-4 space-x-2">
+										{model.freeTier && (
+											<span className="badge badge-success">Offers free tier</span>
+										)}
+										{model.experimental && (
+											<span className="badge badge-warning">Experimental</span>
+										)}
+									</div>
+								</div>
 							))}
+							</div>
 						</div>
-						<div className="modal-action">
+						<div className="modal-action justify-center">
 							<button
 								className="btn"
 								onClick={() => setOpen(false)}

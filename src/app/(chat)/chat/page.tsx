@@ -22,6 +22,10 @@ export default async function Home() {
 				...model,
 				icon: provider.icon,
 				provider: providerKey,
+				providerName: provider.name,
+				freeTier: model.free_tier || false,
+				experimental: model.experimental,
+				description: model.description,
 			})),
 		);
 
