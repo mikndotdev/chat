@@ -6,6 +6,7 @@ import { logtoConfig } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { createXai } from "@ai-sdk/xai";
 import { createGroq } from "@ai-sdk/groq";
 import { streamText, generateId, createDataStream } from "ai";
@@ -39,6 +40,8 @@ function createProviderInstance(providerKey: string, apiKey: string) {
 			return createXai({ apiKey });
 		case "groq":
 			return createGroq({ apiKey });
+		case "anthropic":
+			return createAnthropic({ apiKey });
 		default:
 			throw new Error("Unknown provider");
 	}

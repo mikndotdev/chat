@@ -41,6 +41,7 @@ import {
 	Share,
 	House,
 	PlusCircle,
+	File,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -142,7 +143,13 @@ export const ChatSidebar = ({ data }: Props) => {
 								<Link href={"/settings/models"}>
 									<DropdownMenuItem>
 										<Bot />
-										My Models
+										Your Models
+									</DropdownMenuItem>
+								</Link>
+								<Link href={"/settings/files"}>
+									<DropdownMenuItem>
+										<File />
+										Your Files
 									</DropdownMenuItem>
 								</Link>
 								<Link href={"/settings/shared"}>

@@ -175,5 +175,52 @@
 				"free_tier": true
 			}
 		]
+	},
+	"anthropic": {
+		"name": "Anthropic",
+		"description": "Anthropic's Claude models, known for their safety and reliability.",
+		"icon": "/icons/anthropic.jpeg",
+		"models": [
+			{
+				"name": "Claude 4 Opus",
+				"id": "claude-opus-4-0",
+				"description": "Anthropic's most capable model, boasting a high level of intelligence and capability.",
+				"type": "chat",
+				"price_per_1m_tokens": 15.0,
+				"available": true,
+				"experimental": false,
+				"free_tier": false
+			},
+			{
+				"name": "Claude 4 Sonnet",
+				"id": "claude-sonnet-4-0",
+				"description": "Anthropic's latest model, with a good balance of performance and intelligence.",
+				"type": "chat",
+				"price_per_1m_tokens": 15.0,
+				"available": true,
+				"experimental": false,
+				"free_tier": false
+			},
+			{
+				"name": "Claude 3.7 Sonnet",
+				"id": "claude-3-7-sonnet-latest",
+				"description": "Anthropic's high-performance model, with early extended thinking",
+				"type": "chat",
+				"price_per_1m_tokens": 15.0,
+				"available": true,
+				"experimental": false,
+				"free_tier": false
+			},
+			{
+				"name": "Claude 3.5 Haiku",
+				"id": "claude-3-5-haiku-latest",
+				"description": "Anthropic's fastest, low-cost model, providing intelligence at blazing speeds.",
+				"type": "chat",
+				"price_per_1m_tokens": 4.0,
+				"available": true,
+				"experimental": false,
+				"free_tier": false
+			}
+		]
 	}
 }
