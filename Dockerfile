@@ -2,7 +2,7 @@ FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
 
 ENV LOGTO_COOKIE_SECRET="placeholder"
-ENV REDIS_URL="placeholder"
+ENV REDIS_URL="redis://placeholder@0.0.0.0:6379"
 
 FROM base AS install
 RUN mkdir -p /temp/dev
