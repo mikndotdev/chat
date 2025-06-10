@@ -8,7 +8,7 @@ import { getLogtoContext } from "@logto/next/server-actions";
 import { logtoConfig } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import * as React from "react";
-import {redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function ChatLayout({
 	children,

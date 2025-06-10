@@ -32,11 +32,20 @@ export const ChatPage = ({ id, msg, avatar, status }: ChatProps) => {
 							}
 							alt="Avatar"
 							className="w-auto h-8 rounded-full mr-3"
-							style={{ display: msg.role != "user" && status === "streaming" ? "none" : undefined }}
+							style={{
+								display:
+									msg.role != "user" && status === "streaming"
+										? "none"
+										: undefined,
+							}}
 						/>
 						{msg.role != "user" && status === "streaming" && (
 							<div className="w-8 h-8 flex items-center justify-center mr-3">
-								<span className={"loading loading-spinner loading-lg"}/>
+								<span
+									className={
+										"loading loading-spinner loading-lg"
+									}
+								/>
 							</div>
 						)}
 						<div className="flex flex-col">

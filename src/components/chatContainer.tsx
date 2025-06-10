@@ -50,7 +50,7 @@ export const ChatContainer = ({
 
 	return (
 		<>
-			<ChatPage id={id} avatar={avatar} msg={messages} status={status}/>
+			<ChatPage id={id} avatar={avatar} msg={messages} status={status} />
 			<div className={"flex flex-col items-center justify-center"}>
 				<ChatInput
 					id={id}

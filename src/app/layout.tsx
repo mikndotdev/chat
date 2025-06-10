@@ -17,10 +17,10 @@ interface LocaleLayoutProps {
 
 export default async function Layout({ children }: LocaleLayoutProps) {
 	return (
-		<html className={hsr.className}>
+		<html className={hsr.className} data-theme="flat">
 			<body>
 				{children}
-				<Toaster richColors position={"top-center"}/>
+				<Toaster richColors position={"top-center"} />
 			</body>
 		</html>
 	);

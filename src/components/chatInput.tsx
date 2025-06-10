@@ -73,7 +73,13 @@ export const ChatInput = ({
 				if (attachment) {
 					// @ts-ignore
 					handleSubmit(e, {
-						experimental_attachments: [{ name: attachment.name, contentType: attachment.type, url: attachmentUrl }] as Attachment[],
+						experimental_attachments: [
+							{
+								name: attachment.name,
+								contentType: attachment.type,
+								url: attachmentUrl,
+							},
+						] as Attachment[],
 					});
 					setAttachment(null);
 				} else {
@@ -90,41 +96,62 @@ export const ChatInput = ({
 			<dialog className={"modal"} open={open}>
 				{models && models.length > 0 ? (
 					<div className="modal-box min-w-1/2 max-w-1/2 max-h-3/4 overflow-y-auto">
-						<h3 className="font-bold text-lg text-center">Select a Model</h3>
+						<h3 className="font-bold text-lg text-center">
+							Select a Model
+						</h3>
 						<div className="py-4">
 							<div className={"grid grid-cols-2 gap-2"}>
-							{models.map((model) => (
-								<div
-									key={model.id}
-									className={`card bg-secondary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
-									onClick={() => {
-										setSelectedModel(model.name);
-										setOpen(false);
-									}}
-								>
-									<div className={"card-body p-3 justify-left w-full"}>
-									<div className={"card-title flex flex-row justify-center items-center space-x-2"}>
-									<img
-										src={model.icon}
-										alt={model.provider}
-										className="w-8 h-8 rounded-full"
-									/>
-									<span className={"font-semibold text-md text-neutral"}>
-										{model.providerName} {model.name}
-									</span>
+								{models.map((model) => (
+									<div
+										key={model.id}
+										className={`card bg-secondary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
+										onClick={() => {
+											setSelectedModel(model.name);
+											setOpen(false);
+										}}
+									>
+										<div
+											className={
+												"card-body p-3 justify-left w-full"
+											}
+										>
+											<div
+												className={
+													"card-title flex flex-row justify-center items-center space-x-2"
+												}
+											>
+												<img
+													src={model.icon}
+													alt={model.provider}
+													className="w-8 h-8 rounded-full"
+												/>
+												<span
+													className={
+														"font-semibold text-md text-neutral"
+													}
+												>
+													{model.providerName}{" "}
+													{model.name}
+												</span>
+											</div>
+											<p className={"text-sm text-black"}>
+												{model.description}
+											</p>
+										</div>
+										<div className="justify-center mb-4 space-x-2">
+											{model.freeTier && (
+												<span className="badge badge-success">
+													Offers free tier
+												</span>
+											)}
+											{model.experimental && (
+												<span className="badge badge-warning">
+													Experimental
+												</span>
+											)}
+										</div>
 									</div>
-									<p className={"text-sm text-black"}>{model.description}</p>
-									</div>
-									<div className="justify-center mb-4 space-x-2">
-										{model.freeTier && (
-											<span className="badge badge-success">Offers free tier</span>
-										)}
-										{model.experimental && (
-											<span className="badge badge-warning">Experimental</span>
-										)}
-									</div>
-								</div>
-							))}
+								))}
 							</div>
 						</div>
 						<div className="modal-action justify-center">
@@ -187,23 +214,33 @@ export const ChatInput = ({
 							input.type = "file";
 							input.accept = "image/*,application/pdf";
 							input.onchange = async (e) => {
-								const file = (e.target as HTMLInputElement).files?.[0];
+								const file = (e.target as HTMLInputElement)
+									.files?.[0];
 								if (file) {
-									if( file.size > 8 * 1024 * 1024) {
-										return toast.error("File size exceeds 8MB limit.");
+									if (file.size > 8 * 1024 * 1024) {
+										return toast.error(
+											"File size exceeds 8MB limit.",
+										);
 									}
 									setAttachment(file);
 									if (chatId) {
 										setUploading(true);
 										const formData = new FormData();
 										formData.append("file", file);
-										const upload = await addAttachment(formData, chatId);
+										const upload = await addAttachment(
+											formData,
+											chatId,
+										);
 										setAttachmentUrl(upload.url);
 										setUploading(false);
-										toast.success("Attachment added successfully!");
+										toast.success(
+											"Attachment added successfully!",
+										);
 									} else {
-										setAttachment(null)
-										toast.error("Please start a chat first.");
+										setAttachment(null);
+										toast.error(
+											"Please start a chat first.",
+										);
 									}
 								}
 							};
