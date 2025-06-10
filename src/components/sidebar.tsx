@@ -64,7 +64,7 @@ export const ChatSidebar = ({ data }: Props) => {
 	const isMobile = useIsMobile();
 
 	return (
-		<Sidebar collapsible="icon" className={"bg-neutral text-white"}>
+		<Sidebar collapsible="icon" className={"bg-neutral text-base-content"}>
 			<SidebarHeader className="group-data-[collapsible=icon]:hidden">
 				<Link href="/chat">
 					<SidebarMenuButton
@@ -135,7 +135,7 @@ export const ChatSidebar = ({ data }: Props) => {
 								</SidebarMenuButton>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent
-								className="min-w-56 rounded-lg bg-neutral text-white shadow-md"
+								className="min-w-56 rounded-lg bg-neutral text-base-content shadow-md"
 								side={isMobile ? "bottom" : "right"}
 								align="end"
 								sideOffset={4}

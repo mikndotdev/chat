@@ -104,7 +104,7 @@ export const ChatInput = ({
 								{models.map((model) => (
 									<div
 										key={model.id}
-										className={`card bg-secondary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
+										className={`card bg-primary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
 										onClick={() => {
 											setSelectedModel(model.name);
 											setOpen(false);
@@ -127,14 +127,14 @@ export const ChatInput = ({
 												/>
 												<span
 													className={
-														"font-semibold text-md text-neutral"
+														"font-semibold text-md text-base-content"
 													}
 												>
 													{model.providerName}{" "}
 													{model.name}
 												</span>
 											</div>
-											<p className={"text-sm text-black"}>
+											<p className={"text-sm text-primary-content"}>
 												{model.description}
 											</p>
 										</div>
@@ -212,7 +212,7 @@ export const ChatInput = ({
 						onClick={() => {
 							const input = document.createElement("input");
 							input.type = "file";
-							input.accept = "image/*,application/pdf";
+							input.accept = "image/png, image/jpeg, application/pdf";
 							input.onchange = async (e) => {
 								const file = (e.target as HTMLInputElement)
 									.files?.[0];
@@ -268,7 +268,7 @@ export const ChatInput = ({
 					/>
 					{!model && (
 						<button
-							className="btn btn-secondary"
+							className="btn btn-primary"
 							onClick={() => setOpen(!open)}
 							type="button"
 						>
@@ -276,7 +276,7 @@ export const ChatInput = ({
 						</button>
 					)}
 					<button
-						className="btn btn-secondary"
+						className="btn btn-primary"
 						type="submit"
 						disabled={status !== "ready" && status !== "error"}
 					>

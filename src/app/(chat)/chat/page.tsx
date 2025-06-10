@@ -32,10 +32,10 @@ export default async function Home() {
 	return (
 		<main>
 			<div className="h-screen flex flex-col items-center justify-center text-center">
-				<h1 className="text-white font-bold text-4xl">
+				<h1 className="text-base-content font-bold text-4xl">
 					Hello, {claims?.name}
 				</h1>
-				<p className="text-gray-500 text-sm mt-5">
+				<p className="text-base-content/70 text-sm mt-5">
 					Start a new chat by typing a message down below!
 				</p>
 			</div>
