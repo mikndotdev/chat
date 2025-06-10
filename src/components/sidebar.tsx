@@ -166,7 +166,7 @@ export const ChatSidebar = ({ data }: Props) => {
 									</DropdownMenuItem>
 								</Link>
 								<DropdownMenuSeparator />
-								<Link href={"/logout"}>
+								<Link href={"/logout"} prefetch={false}>
 									<DropdownMenuItem>
 										<LogOut />
 										Log out
