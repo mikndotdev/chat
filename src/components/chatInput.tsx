@@ -134,7 +134,11 @@ export const ChatInput = ({
 													{model.name}
 												</span>
 											</div>
-											<p className={"text-sm text-primary-content"}>
+											<p
+												className={
+													"text-sm text-primary-content"
+												}
+											>
 												{model.description}
 											</p>
 										</div>
@@ -212,7 +216,8 @@ export const ChatInput = ({
 						onClick={() => {
 							const input = document.createElement("input");
 							input.type = "file";
-							input.accept = "image/png, image/jpeg, application/pdf";
+							input.accept =
+								"image/png, image/jpeg, application/pdf";
 							input.onchange = async (e) => {
 								const file = (e.target as HTMLInputElement)
 									.files?.[0];

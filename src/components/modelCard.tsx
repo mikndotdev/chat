@@ -27,12 +27,14 @@ export const ModelCard = ({
 	const [key, setKey] = useState(apiKey || "");
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [configuredState, setConfiguredState] = useState(configured);
 
 	const set = async (id: string) => {
 		try {
 			console.log(id, key);
 			await setApiKey({ provider: id, key });
 			toast.success(`API Key for ${name} set successfully!`);
+			setConfiguredState(true);
 			setOpen(false);
 		} catch (error) {
 			toast.error(`Failed to set API Key. Please try again.`);
@@ -43,6 +45,7 @@ export const ModelCard = ({
 		try {
 			await deleteApiKey(id);
 			toast.success(`API Key for ${name} removed successfully!`);
+			setConfiguredState(false);
 			setOpen(false);
 		} catch (error) {
 			toast.error(`Failed to remove API Key. Please try again.`);
@@ -72,9 +75,9 @@ export const ModelCard = ({
 						className="input input-bordered w-full"
 						placeholder="Enter API Key"
 					/>
-					<div className="modal-action">
+					<div className="modal-action justify-center">
 						<button
-							className="btn btn-primary"
+							className="btn"
 							disabled={loading || !key}
 							onClick={() => {
 								set(id);
@@ -82,7 +85,10 @@ export const ModelCard = ({
 						>
 							Save
 						</button>
-						<button className="btn" onClick={() => setOpen(false)}>
+						<button
+							className="btn btn-primary"
+							onClick={() => setOpen(false)}
+						>
 							Close
 						</button>
 					</div>
@@ -98,10 +104,10 @@ export const ModelCard = ({
 				<p className="text-base-content/70">{description}</p>
 			</div>
 			<div className="ml-auto mr-2">
-				{configured ? (
+				{configuredState ? (
 					<>
 						<button
-							className="btn btn-sm btn-ghost"
+							className="btn btn-sm btn-ghost mr-2"
 							onClick={() => remove(id)}
 						>
 							<X className="h-8 w-8" />

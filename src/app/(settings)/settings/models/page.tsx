@@ -24,7 +24,10 @@ export default async function Home() {
 	return (
 		<div className="container mx-auto p-4">
 			<h1 className={"text-base-content text-4xl"}>Model Settings</h1>
-			<div className="grid py-5 space-y-2">
+			<h2 className={"text-base-content text-xl mt-5 mb-2"}>
+				Model Providers
+			</h2>
+			<div className="grid space-y-2">
 				{Object.entries(models).map(([providerKey, provider]) => (
 					<ModelCard
 						name={provider.name}
@@ -38,6 +41,12 @@ export default async function Home() {
 					/>
 				))}
 			</div>
+			<h2 className={"text-base-content text-xl mt-5 mb-2"}>
+				OpenRouter
+			</h2>
+			<h2 className={"text-base-content text-xl mt-5 mb-2"}>
+				Custom Provider
+			</h2>
 		</div>
 	);
 }
