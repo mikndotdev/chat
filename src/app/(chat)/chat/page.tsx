@@ -26,6 +26,7 @@ export default async function Home() {
 				freeTier: model.free_tier || false,
 				experimental: model.experimental,
 				description: model.description,
+				supports_attachment: model.supports_attachment || false,
 			})),
 		);
 

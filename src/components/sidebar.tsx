@@ -176,7 +176,6 @@ export const ChatSidebar = ({ data }: Props) => {
 						</DropdownMenu>
 					</SidebarMenuItem>
 				</SidebarMenu>
-				{/* Nav User */}
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>

@@ -21,10 +21,11 @@ interface ChatInputProps {
 		providerName: string;
 		freeTier: boolean;
 		experimental: boolean;
+		supports_attachment?: boolean;
 	}[];
 	input?: string;
 	handleInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	handleSubmit?: (e: FormEvent) => void;
+	handleSubmit?: (e: FormEvent, extra?: any) => void;
 }
 
 export const ChatInput = ({
@@ -49,6 +50,9 @@ export const ChatInput = ({
 		: null;
 	const isInChat = Boolean(chatId);
 
+	// Find the selected model object
+	const selectedModelObj = models?.find((m) => m.name === selectedModel);
+
 	const sendMessage = async (e: FormEvent) => {
 		e.preventDefault();
 		const inputEl = e.currentTarget.querySelector("input");
@@ -71,16 +75,17 @@ export const ChatInput = ({
 		} else {
 			if (isInChat) {
 				if (attachment) {
-					// @ts-ignore
-					handleSubmit(e, {
-						experimental_attachments: [
-							{
-								name: attachment.name,
-								contentType: attachment.type,
-								url: attachmentUrl,
-							},
-						] as Attachment[],
-					});
+					if (handleSubmit) {
+						handleSubmit(e, {
+							experimental_attachments: [
+								{
+									name: attachment.name,
+									contentType: attachment.type,
+									url: attachmentUrl,
+								},
+							] as Attachment[],
+						});
+					}
 					setAttachment(null);
 				} else {
 					if (handleSubmit) {
@@ -193,68 +198,72 @@ export const ChatInput = ({
 				)}
 			</dialog>
 			<div className="flex flex-row items-center space-x-3 w-full">
-				{attachment && !uploading ? (
-					<div className="flex items-center space-x-2">
-						{attachment.type.startsWith("image/") ? (
-							<img
-								src={attachmentUrl}
-								alt="Attachment"
-								className="w-12 h-12 rounded-lg object-cover"
-							/>
-						) : attachment.type.startsWith("application/pdf") ? (
-							<div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded-lg">
-								<span className="text-gray-500">PDF</span>
-							</div>
-						) : null}
-						<X onClick={() => setAttachment(null)} />
-					</div>
-				) : uploading ? (
-					<span className="loading loading-spinner loading-lg" />
-				) : (
-					<button
-						className="btn btn-ghost"
-						onClick={() => {
-							const input = document.createElement("input");
-							input.type = "file";
-							input.accept =
-								"image/png, image/jpeg, application/pdf";
-							input.onchange = async (e) => {
-								const file = (e.target as HTMLInputElement)
-									.files?.[0];
-								if (file) {
-									if (file.size > 8 * 1024 * 1024) {
-										return toast.error(
-											"File size exceeds 8MB limit.",
-										);
+				{isInChat &&
+					selectedModelObj?.supports_attachment &&
+					(attachment && !uploading ? (
+						<div className="flex items-center space-x-2">
+							{attachment.type.startsWith("image/") ? (
+								<img
+									src={attachmentUrl}
+									alt="Attachment"
+									className="w-12 h-12 rounded-lg object-cover"
+								/>
+							) : attachment.type.startsWith(
+									"application/pdf",
+								) ? (
+								<div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded-lg">
+									<span className="text-gray-500">PDF</span>
+								</div>
+							) : null}
+							<X onClick={() => setAttachment(null)} />
+						</div>
+					) : uploading ? (
+						<span className="loading loading-spinner loading-lg" />
+					) : (
+						<button
+							className="btn btn-ghost"
+							onClick={() => {
+								const input = document.createElement("input");
+								input.type = "file";
+								input.accept =
+									"image/png, image/jpeg, application/pdf";
+								input.onchange = async (e) => {
+									const file = (e.target as HTMLInputElement)
+										.files?.[0];
+									if (file) {
+										if (file.size > 8 * 1024 * 1024) {
+											return toast.error(
+												"File size exceeds 8MB limit.",
+											);
+										}
+										setAttachment(file);
+										if (chatId) {
+											setUploading(true);
+											const formData = new FormData();
+											formData.append("file", file);
+											const upload = await addAttachment(
+												formData,
+												chatId,
+											);
+											setAttachmentUrl(upload.url);
+											setUploading(false);
+											toast.success(
+												"Attachment added successfully!",
+											);
+										} else {
+											setAttachment(null);
+											toast.error(
+												"Please start a chat first.",
+											);
+										}
 									}
-									setAttachment(file);
-									if (chatId) {
-										setUploading(true);
-										const formData = new FormData();
-										formData.append("file", file);
-										const upload = await addAttachment(
-											formData,
-											chatId,
-										);
-										setAttachmentUrl(upload.url);
-										setUploading(false);
-										toast.success(
-											"Attachment added successfully!",
-										);
-									} else {
-										setAttachment(null);
-										toast.error(
-											"Please start a chat first.",
-										);
-									}
-								}
-							};
-							input.click();
-						}}
-					>
-						<Paperclip />
-					</button>
-				)}
+								};
+								input.click();
+							}}
+						>
+							<Paperclip />
+						</button>
+					))}
 				<form
 					className={"flex flex-row items-center space-x-3 w-full"}
 					onSubmit={sendMessage}

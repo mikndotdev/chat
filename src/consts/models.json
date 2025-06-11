@@ -11,7 +11,8 @@
 				"type": "chat",
 				"price_per_1m_tokens": 15.0,
 				"available": true,
-				"experimental": true
+				"experimental": true,
+				"supports_attachment": true
 			},
 			{
 				"name": "Gemini 2.5 Flash Thinking",
@@ -21,7 +22,8 @@
 				"price_per_1m_tokens": 3.5,
 				"available": true,
 				"experimental": true,
-				"free_tier": true
+				"free_tier": true,
+				"supports_attachment": true
 			},
 			{
 				"name": "Gemini 2.0 Flash",
@@ -31,7 +33,8 @@
 				"price_per_1m_tokens": 0.4,
 				"available": true,
 				"experimental": false,
-				"free_tier": true
+				"free_tier": true,
+				"supports_attachment": true
 			},
 			{
 				"name": "Gemini 2.0 Flash Lite",
@@ -41,7 +44,8 @@
 				"price_per_1m_tokens": 0.3,
 				"available": true,
 				"experimental": false,
-				"free_tier": true
+				"free_tier": true,
+				"supports_attachment": true
 			}
 		]
 	},
@@ -58,7 +62,8 @@
 				"price_per_1m_tokens": 15.0,
 				"available": true,
 				"experimental": true,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": false
 			},
 			{
 				"name": "Grok 3 Mini",
@@ -68,7 +73,8 @@
 				"price_per_1m_tokens": 0.5,
 				"available": true,
 				"experimental": true,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": false
 			}
 		]
 	},
@@ -85,7 +91,8 @@
 				"price_per_1m_tokens": 8.0,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			},
 			{
 				"name": "GPT-4.1 Mini",
@@ -95,7 +102,8 @@
 				"price_per_1m_tokens": 1.6,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			},
 			{
 				"name": "GPT-4.1 Nano",
@@ -105,7 +113,8 @@
 				"price_per_1m_tokens": 0.4,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			},
 			{
 				"name": "GPT-4o",
@@ -115,7 +124,8 @@
 				"price_per_1m_tokens": 10.0,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			},
 			{
 				"name": "GPT-4o Mini",
@@ -125,7 +135,8 @@
 				"price_per_1m_tokens": 0.6,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			},
 			{
 				"name": "o3",
@@ -135,7 +146,8 @@
 				"price_per_1m_tokens": 40.0,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			},
 			{
 				"name": "o4 Mini",
@@ -145,7 +157,8 @@
 				"price_per_1m_tokens": 4.4,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			}
 		]
 	},
@@ -162,7 +175,8 @@
 				"price_per_1m_tokens": 1.0,
 				"available": true,
 				"experimental": true,
-				"free_tier": true
+				"free_tier": true,
+				"supports_attachment": false
 			},
 			{
 				"name": "Qwen QwQ 32B",
@@ -172,7 +186,8 @@
 				"price_per_1m_tokens": 0.4,
 				"available": true,
 				"experimental": true,
-				"free_tier": true
+				"free_tier": true,
+				"supports_attachment": false
 			}
 		]
 	},
@@ -189,7 +204,8 @@
 				"price_per_1m_tokens": 15.0,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			},
 			{
 				"name": "Claude 4 Sonnet",
@@ -199,7 +215,8 @@
 				"price_per_1m_tokens": 15.0,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			},
 			{
 				"name": "Claude 3.7 Sonnet",
@@ -209,7 +226,8 @@
 				"price_per_1m_tokens": 15.0,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": true
 			},
 			{
 				"name": "Claude 3.5 Haiku",
@@ -219,7 +237,8 @@
 				"price_per_1m_tokens": 4.0,
 				"available": true,
 				"experimental": false,
-				"free_tier": false
+				"free_tier": false,
+				"supports_attachment": false
 			}
 		]
 	}
