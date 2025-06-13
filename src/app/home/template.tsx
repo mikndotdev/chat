@@ -94,7 +94,7 @@ export default function PagesLayout({ children }: { children: ReactNode }) {
 			<Header
 				navigation={nav}
 				buttons={buttons}
-				className="text-white bg-neutral"
+				className="text-base-content bg-neutral"
 				color="#6F45E3"
 				brand={{
 					showTitle: true,

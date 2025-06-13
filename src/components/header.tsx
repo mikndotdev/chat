@@ -293,7 +293,7 @@ export const Header = forwardRef<HTMLDivElement, HeaderProps>(
 		});
 
 		const headerVariants = tv({
-			base: "fixed inset-x-0 top-0 z-50 py-2 transition-[padding-top,padding-bottom,box-shadow] ease-in-out lg:py-0 text-white",
+			base: "fixed inset-x-0 top-0 z-50 py-2 transition-[padding-top,padding-bottom,box-shadow] ease-in-out lg:py-0",
 			variants: {
 				isScrolled: {
 					true: "border-b border-outline backdrop-blur backdrop-opacity-50",

@@ -13,6 +13,13 @@ export default async function Home() {
 		where: { userId: claims?.sub || "" },
 	});
 
+	const openRouterModels = await prisma.customProvider.findMany({
+		where: {
+			userId: claims?.sub || "",
+			type: "openrouter",
+		},
+	});
+
 	const availableModels = Object.entries(models)
 		.filter(([providerKey]) =>
 			userKeys.some((key) => key.providerId === providerKey),
@@ -30,6 +37,10 @@ export default async function Home() {
 			})),
 		);
 
+	const openRouterKey = userKeys.find(
+		(key) => key.providerId === "openrouter",
+	);
+
 	return (
 		<main>
 			<div className="h-screen flex flex-col items-center justify-center text-center">
@@ -41,7 +52,12 @@ export default async function Home() {
 				</p>
 			</div>
 			<div className={"flex items-center justify-center"}>
-				<ChatInput models={availableModels} status={"ready"} />
+				<ChatInput
+					models={availableModels}
+					status={"ready"}
+					openRouterModels={openRouterModels}
+					openRouterEnabled={!!openRouterKey}
+				/>
 			</div>
 		</main>
 	);

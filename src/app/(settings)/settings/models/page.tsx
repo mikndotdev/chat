@@ -7,6 +7,8 @@ import { logtoConfig } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 import { ModelCard } from "@/components/modelCard";
+import { OpenRouterModelList } from "@/components/OpenRouterModelList";
+import { OpenRouterBadge } from "@/components/OpenRouterConfigButton";
 
 export default async function Home() {
 	const { claims } = await getLogtoContext(logtoConfig);
@@ -18,6 +20,20 @@ export default async function Home() {
 	const userKeys = await prisma.apiKey.findMany({
 		where: {
 			userId: claims?.sub,
+		},
+	});
+
+	const userOllamaModels = await prisma.customProvider.findMany({
+		where: {
+			userId: claims?.sub,
+			type: "ollama",
+		},
+	});
+
+	const userOpenRouterModels = await prisma.customProvider.findMany({
+		where: {
+			userId: claims?.sub,
+			type: "openrouter",
 		},
 	});
 
@@ -41,9 +57,17 @@ export default async function Home() {
 					/>
 				))}
 			</div>
-			<h2 className={"text-base-content text-xl mt-5 mb-2"}>
-				OpenRouter
-			</h2>
+			<div className={"flex flex-row gap-2  mt-5 mb-2"}>
+				<h2 className={"text-base-content text-xl"}>OpenRouter</h2>
+				<OpenRouterBadge
+					configured={userKeys.some(
+						(key) => key.providerId === "openrouter",
+					)}
+				/>
+			</div>
+			<div className="grid space-y-2">
+				<OpenRouterModelList models={userOpenRouterModels} />
+			</div>
 			<h2 className={"text-base-content text-xl mt-5 mb-2"}>
 				Custom Provider
 			</h2>

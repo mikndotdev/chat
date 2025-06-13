@@ -23,6 +23,9 @@ interface ChatInputProps {
 		experimental: boolean;
 		supports_attachment?: boolean;
 	}[];
+	customModels?: any[];
+	openRouterModels?: any[];
+	openRouterEnabled?: boolean;
 	input?: string;
 	handleInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handleSubmit?: (e: FormEvent, extra?: any) => void;
@@ -44,6 +47,7 @@ export const ChatInput = ({
 	const [attachmentUrl, setAttachmentUrl] = useState("");
 	const [uploading, setUploading] = useState(false);
 	const [open, setOpen] = useState(false);
+	const [tab, setTab] = useState("providers");
 
 	const chatId = pathname.startsWith("/chat/")
 		? pathname.split("/chat/")[1]?.split("/")[0]
@@ -104,63 +108,105 @@ export const ChatInput = ({
 						<h3 className="font-bold text-lg text-center">
 							Select a Model
 						</h3>
+						<div
+							role="tablist"
+							className="tabs tabs-border justify-center"
+						>
+							<a
+								role="tab"
+								className={`tab ${tab === "providers" ? "tab-active" : ""}`}
+								onClick={() => setTab("providers")}
+							>
+								Model Providers
+							</a>
+							<a
+								role="tab"
+								className={`tab ${tab === "openrouter" ? "tab-active" : ""}`}
+								onClick={() => setTab("openrouter")}
+							>
+								OpenRouter
+							</a>
+							<a
+								role="tab"
+								className={`tab ${tab === "ollama" ? "tab-active" : ""}`}
+								onClick={() => setTab("ollama")}
+							>
+								Custom Providers
+							</a>
+						</div>
 						<div className="py-4">
-							<div className={"grid grid-cols-2 gap-2"}>
-								{models.map((model) => (
-									<div
-										key={model.id}
-										className={`card bg-primary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
-										onClick={() => {
-											setSelectedModel(model.name);
-											setOpen(false);
-										}}
-									>
+							<div className="grid grid-cols-2 gap-2">
+								{tab === "providers" &&
+									models &&
+									models.map((model) => (
 										<div
-											className={
-												"card-body p-3 justify-left w-full"
-											}
+											key={model.id}
+											className={`card bg-primary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
+											onClick={() => {
+												setSelectedModel(model.name);
+												setOpen(false);
+											}}
 										>
 											<div
 												className={
-													"card-title flex flex-row justify-center items-center space-x-2"
+													"card-body p-3 justify-left w-full"
 												}
 											>
-												<img
-													src={model.icon}
-													alt={model.provider}
-													className="w-8 h-8 rounded-full"
-												/>
-												<span
+												<div
 													className={
-														"font-semibold text-md text-base-content"
+														"card-title flex flex-row justify-center items-center space-x-2"
 													}
 												>
-													{model.providerName}{" "}
-													{model.name}
-												</span>
+													<img
+														src={model.icon}
+														alt={model.provider}
+														className="w-8 h-8 rounded-full"
+													/>
+													<span
+														className={
+															"font-semibold text-md text-base-content"
+														}
+													>
+														{model.providerName}{" "}
+														{model.name}
+													</span>
+												</div>
+												<p
+													className={
+														"text-sm text-primary-content"
+													}
+												>
+													{model.description}
+												</p>
 											</div>
-											<p
-												className={
-													"text-sm text-primary-content"
-												}
-											>
-												{model.description}
-											</p>
+											<div className="card-actions justify-center mb-4 space-x-2">
+												{model.freeTier && (
+													<span className="badge badge-success">
+														Offers free tier
+													</span>
+												)}
+												{model.experimental && (
+													<span className="badge badge-warning">
+														Experimental
+													</span>
+												)}
+											</div>
 										</div>
-										<div className="justify-center mb-4 space-x-2">
-											{model.freeTier && (
-												<span className="badge badge-success">
-													Offers free tier
-												</span>
-											)}
-											{model.experimental && (
-												<span className="badge badge-warning">
-													Experimental
-												</span>
-											)}
-										</div>
+									))}
+								{tab === "openrouter" && (
+									<div className="col-span-2 flex flex-col items-center justify-center py-8">
+										<span className="text-base-content/70">
+											OpenRouter models coming soon.
+										</span>
 									</div>
-								))}
+								)}
+								{tab === "ollama" && (
+									<div className="col-span-2 flex flex-col items-center justify-center py-8">
+										<span className="text-base-content/70">
+											Custom providers coming soon.
+										</span>
+									</div>
+								)}
 							</div>
 						</div>
 						<div className="modal-action justify-center">
