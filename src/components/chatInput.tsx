@@ -39,10 +39,13 @@ export const ChatInput = ({
 	handleInputChange,
 	handleSubmit,
 	status,
+	openRouterModels,
+	openRouterEnabled,
 }: ChatInputProps) => {
 	const pathname = usePathname();
 	const router = useRouter();
 	const [selectedModel, setSelectedModel] = useState(model);
+	const [modelType, setModelType] = useState("");
 	const [attachment, setAttachment] = useState<File | null>(null);
 	const [attachmentUrl, setAttachmentUrl] = useState("");
 	const [uploading, setUploading] = useState(false);
@@ -72,9 +75,9 @@ export const ChatInput = ({
 			}
 			const chat = await startChat({
 				model: selectedModel,
+				type: modelType,
 				message,
 			});
-			console.log("chat", chat);
 			await router.push(`/chat/${chat.id}`);
 		} else {
 			if (isInChat) {
@@ -144,6 +147,7 @@ export const ChatInput = ({
 											className={`card bg-primary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
 											onClick={() => {
 												setSelectedModel(model.name);
+												setModelType("provider");
 												setOpen(false);
 											}}
 										>
@@ -195,9 +199,53 @@ export const ChatInput = ({
 									))}
 								{tab === "openrouter" && (
 									<div className="col-span-2 flex flex-col items-center justify-center py-8">
-										<span className="text-base-content/70">
-											OpenRouter models coming soon.
-										</span>
+										{openRouterEnabled ? (
+											<>
+												{openRouterModels && openRouterModels.length > 0 ? (
+													<div className="grid grid-cols-2 gap-2 w-full">
+														{openRouterModels.map((model) => (
+															<div
+																key={model.id}
+																className={`card bg-primary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
+																onClick={() => {
+																	setSelectedModel(model.name);
+																	setModelType("openrouter");
+																	setOpen(false);
+																}}
+															>
+																<div
+																	className={
+																		"card-body p-3 justify-left w-full"
+																	}
+																>
+																	<div
+																		className={
+																			"card-title flex flex-row justify-center items-center space-x-2"
+																		}
+																	>
+																		<span
+																			className={
+																				"font-semibold text-md text-base-content"
+																			}
+																		>
+																			{model.name}
+																		</span>
+																	</div>
+																</div>
+															</div>
+														))}
+													</div>
+												) : (
+													<span className="text-base-content/70">
+														no models available.
+													</span>
+												)}
+											</>
+										) : (
+											<span className="text-base-content/70">
+												OpenRouter is not configured. Please add your OpenRouter API key in settings.
+											</span>
+										)}
 									</div>
 								)}
 								{tab === "ollama" && (

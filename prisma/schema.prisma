@@ -42,7 +42,7 @@ model Chat {
   name        String?
   messages    Message[]
   model       String
-  customModel Boolean      @default(false)
+  modelType   String       @default("provider")
   public      Boolean      @default(false)
   User        User         @relation(fields: [userId], references: [id])
   attachments Attachment[]

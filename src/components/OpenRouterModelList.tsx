@@ -9,7 +9,7 @@ import { X } from "lucide-react";
 
 interface OpenRouterModel {
 	id: string;
-	name: string;
+	name: string | null;
 	description?: string;
 }
 

@@ -15,9 +15,11 @@ const ModelNameToId: Record<string, string> = Object.entries(Models)
 export async function startChat({
 	model,
 	message,
+	type,
 }: {
 	model: string;
 	message: string;
+	type?: string | "provider";
 }) {
 	const { claims } = await getLogtoContext(logtoConfig);
 
@@ -25,12 +27,13 @@ export async function startChat({
 		throw new Error("User not authenticated");
 	}
 
-	const modelId = ModelNameToId[model];
+	const modelId = ModelNameToId[model] || model;
 
 	const chat = await prisma.chat.create({
 		data: {
 			userId: claims.sub,
 			model: modelId,
+			modelType: type,
 		},
 	});
 

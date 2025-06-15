@@ -62,7 +62,7 @@ export default async function Home({
 		orderBy: { createdAt: "asc" },
 	});
 
-	const modelInfo = ModelInfoFromID[chat.model];
+	const modelInfo = ModelInfoFromID[chat.model] || chat.model;
 
 	return (
 		<main className="container mx-auto p-4">
@@ -71,7 +71,7 @@ export default async function Home({
 			</h1>
 			<div className="mb-4">
 				<p>
-					<strong>Model:</strong> {modelInfo?.name || "Unknown Model"}
+					<strong>Model:</strong> {modelInfo?.name || chat.model || "Unknown Model"}
 				</p>
 				<ChatMeta createdAt={chat.createdAt.toISOString()} />
 			</div>

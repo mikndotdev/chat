@@ -9,6 +9,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createXai } from "@ai-sdk/xai";
 import { createGroq } from "@ai-sdk/groq";
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { streamText, generateId, createDataStream } from "ai";
 import Models from "@/consts/models.json";
 
@@ -30,6 +31,15 @@ function getProviderKeyFromModelId(modelId: string): string | undefined {
 	return undefined;
 }
 
+async function getUserORKey (userId: string) {
+	return prisma.apiKey.findFirst({
+		where: {
+			userId,
+			providerId: "openrouter",
+		},
+	});
+}
+
 function createProviderInstance(providerKey: string, apiKey: string) {
 	switch (providerKey) {
 		case "openai":
@@ -42,6 +52,8 @@ function createProviderInstance(providerKey: string, apiKey: string) {
 			return createGroq({ apiKey });
 		case "anthropic":
 			return createAnthropic({ apiKey });
+		case "openrouter":
+			return createOpenRouter({ apiKey });
 		default:
 			throw new Error("Unknown provider");
 	}
@@ -65,6 +77,39 @@ export async function POST(req: NextRequest) {
 		return new Response("Chat not found.", { status: 404 });
 
 	const modelId = chatData.model;
+	const modelType = chatData.modelType;
+
+	if(modelType === "openrouter") {
+		const providerKey = await getUserORKey(claims?.sub);
+		if (!providerKey) {
+			return new Response("OpenRouter API key not found for user.", { status: 400 });
+		}
+		const provider = createOpenRouter({ apiKey: providerKey.key });
+		const streamId = generateId();
+		await prisma.stream.create({
+			data: {
+				chatId: id,
+				streamId,
+			},
+		});
+		const result = streamText({
+			model: provider.chat(modelId),
+			messages,
+			onFinish: async (message) => {
+				await addMessage({
+					message: {
+						content: message.text,
+						role: "assistant",
+					},
+					id,
+				});
+				await prisma.stream.deleteMany({
+					where: { streamId: streamId },
+				});
+			},
+		});
+		return result.toDataStreamResponse();
+	}
 	const providerKey = getProviderKeyFromModelId(modelId);
 	if (!providerKey)
 		return new Response("Provider not found.", { status: 400 });
@@ -87,6 +132,7 @@ export async function POST(req: NextRequest) {
 	});
 
 	const result = streamText({
+		//@ts-ignore
 		model: provider(modelId),
 		messages,
 		onFinish: async (message) => {
