@@ -5,6 +5,7 @@ ENV LOGTO_COOKIE_SECRET="placeholder"
 ENV REDIS_URL="redis://placeholder@0.0.0.0:6379"
 
 FROM base AS install
+
 RUN mkdir -p /temp/dev
 COPY package.json bun.lock /temp/dev/
 RUN cd /temp/dev && bun install --frozen-lockfile
@@ -16,6 +17,7 @@ RUN cd /temp/prod && bun install --frozen-lockfile --production
 FROM base AS builder
 COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
+RUN apt-get update && apt-get install -y openssl
 RUN bunx prisma generate
 ENV NODE_ENV=production
 RUN bun run build
