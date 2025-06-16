@@ -25,15 +25,16 @@ model User {
 }
 
 model Message {
-  id        String   @id @default(cuid())
-  content   String
-  createdAt DateTime @default(now())
-  userId    String
-  Chat      Chat?    @relation(fields: [chatId], references: [id])
-  chatId    String?
-  public    Boolean  @default(false)
-  loading   Boolean  @default(true)
-  role      String   @default("user")
+  id          String       @id @default(cuid())
+  content     String
+  createdAt   DateTime     @default(now())
+  userId      String
+  Chat        Chat?        @relation(fields: [chatId], references: [id])
+  chatId      String?
+  public      Boolean      @default(false)
+  loading     Boolean      @default(true)
+  role        String       @default("user")
+  attachments Attachment[]
 }
 
 model Chat {
@@ -69,6 +70,8 @@ model Attachment {
   chatId    String
   chat      Chat?    @relation(fields: [chatId], references: [id])
   User      User?    @relation(fields: [userId], references: [id])
+  Message   Message? @relation(fields: [messageId], references: [id])
+  messageId String?
 }
 
 model ApiKey {

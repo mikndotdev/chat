@@ -9,7 +9,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createXai } from "@ai-sdk/xai";
 import { createGroq } from "@ai-sdk/groq";
-import { createOpenRouter } from '@openrouter/ai-sdk-provider';
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText, generateId, createDataStream } from "ai";
 import Models from "@/consts/models.json";
 
@@ -31,7 +31,7 @@ function getProviderKeyFromModelId(modelId: string): string | undefined {
 	return undefined;
 }
 
-async function getUserORKey (userId: string) {
+async function getUserORKey(userId: string) {
 	return prisma.apiKey.findFirst({
 		where: {
 			userId,
@@ -60,39 +60,86 @@ function createProviderInstance(providerKey: string, apiKey: string) {
 }
 
 export async function POST(req: NextRequest) {
-	const { messages } = (await req.json()) as { messages: any[] };
-	const headersList = await headers();
-	const id = headersList.get("X-Chat-Id");
-	const { claims } = await getLogtoContext(logtoConfig);
+	try {
+		const { messages } = (await req.json()) as { messages: any[] };
+		const headersList = await headers();
+		const id = headersList.get("X-Chat-Id");
+		const { claims } = await getLogtoContext(logtoConfig);
 
-	if (!claims) {
-		return new Response("User not authenticated.", { status: 401 });
-	}
-
-	if (!id) return new Response("Chat not found.", { status: 404 });
-
-	const chatData = await prisma.chat.findUnique({ where: { id } });
-	if (!chatData) return new Response("Chat not found.", { status: 404 });
-	if (chatData.userId !== claims?.sub)
-		return new Response("Chat not found.", { status: 404 });
-
-	const modelId = chatData.model;
-	const modelType = chatData.modelType;
-
-	if(modelType === "openrouter") {
-		const providerKey = await getUserORKey(claims?.sub);
-		if (!providerKey) {
-			return new Response("OpenRouter API key not found for user.", { status: 400 });
+		if (!claims) {
+			return new Response("User not authenticated.", { status: 401 });
 		}
-		const provider = createOpenRouter({ apiKey: providerKey.key });
+
+		if (!id) return new Response("Chat not found.", { status: 404 });
+
+		const chatData = await prisma.chat.findUnique({ where: { id } });
+		if (!chatData) return new Response("Chat not found.", { status: 404 });
+		if (chatData.userId !== claims?.sub)
+			return new Response("Chat not found.", { status: 404 });
+
+		const modelId = chatData.model;
+		const modelType = chatData.modelType;
+
+		if (modelType === "openrouter") {
+			const providerKey = await getUserORKey(claims?.sub);
+			if (!providerKey) {
+				return new Response("OpenRouter API key not found for user.", {
+					status: 400,
+				});
+			}
+			const provider = createOpenRouter({ apiKey: providerKey.key });
+			const streamId = generateId();
+			await prisma.stream.create({
+				data: {
+					chatId: id,
+					streamId,
+				},
+			});
+
+			const result = streamText({
+				model: provider.chat(modelId),
+				messages,
+				onFinish: async (message) => {
+					await addMessage({
+						message: {
+							content: message.text,
+							role: "assistant",
+						},
+						id,
+					});
+					await prisma.stream.deleteMany({
+						where: { streamId: streamId },
+					});
+				},
+			});
+			return result.toDataStreamResponse();
+		}
+
+		const providerKey = getProviderKeyFromModelId(modelId);
+		if (!providerKey)
+			return new Response("Provider not found.", { status: 400 });
+
+		const userKey = await prisma.apiKey.findFirst({
+			where: { userId: claims.sub, providerId: providerKey },
+		});
+		if (!userKey)
+			return new Response("API key not found for provider.", {
+				status: 400,
+			});
+
+		const provider = createProviderInstance(providerKey, userKey.key);
+
 		const streamId = generateId();
+
 		await prisma.stream.create({
 			data: {
 				chatId: id,
 				streamId,
 			},
 		});
+
 		const result = streamText({
+			//@ts-ignore
 			model: provider.chat(modelId),
 			messages,
 			onFinish: async (message) => {
@@ -108,86 +155,20 @@ export async function POST(req: NextRequest) {
 				});
 			},
 		});
+
 		return result.toDataStreamResponse();
+	} catch (error) {
+		console.error("Error in chat API:", error);
+		return new Response(
+			JSON.stringify({
+				error: "An error occurred while processing your request.",
+				details:
+					error instanceof Error ? error.message : "Unknown error",
+			}),
+			{
+				status: 500,
+				headers: { "Content-Type": "application/json" },
+			},
+		);
 	}
-	const providerKey = getProviderKeyFromModelId(modelId);
-	if (!providerKey)
-		return new Response("Provider not found.", { status: 400 });
-
-	const userKey = await prisma.apiKey.findFirst({
-		where: { userId: claims.sub, providerId: providerKey },
-	});
-	if (!userKey)
-		return new Response("API key not found for provider.", { status: 400 });
-
-	const provider = createProviderInstance(providerKey, userKey.key);
-
-	const streamId = generateId();
-
-	await prisma.stream.create({
-		data: {
-			chatId: id,
-			streamId,
-		},
-	});
-
-	const result = streamText({
-		//@ts-ignore
-		model: provider(modelId),
-		messages,
-		onFinish: async (message) => {
-			await addMessage({
-				message: {
-					content: message.text,
-					role: "assistant",
-				},
-				id,
-			});
-			await prisma.stream.deleteMany({
-				where: { streamId: streamId },
-			});
-		},
-	});
-
-	return result.toDataStreamResponse();
-}
-
-export async function GET(req: NextRequest) {
-	const headersList = await headers();
-	const id = headersList.get("X-Chat-Id");
-	const { claims } = await getLogtoContext(logtoConfig);
-
-	if (!claims) {
-		return new Response("User not authenticated.", { status: 401 });
-	}
-
-	if (!id) return new Response("Chat not found.", { status: 404 });
-
-	const chatData = await prisma.chat.findUnique({ where: { id } });
-	if (!chatData) return new Response("Chat not found.", { status: 404 });
-	if (chatData.userId !== claims?.sub)
-		return new Response("Chat not found.", { status: 404 });
-
-	const recentStream = await prisma.stream.findFirst({
-		where: { chatId: id },
-	});
-
-	if (!recentStream) {
-		return new Response("Stream not found.", { status: 404 });
-	}
-
-	const emptyDataStream = createDataStream({
-		execute: () => {},
-	});
-
-	const stream = await streamContext.resumableStream(
-		recentStream.streamId,
-		() => emptyDataStream,
-	);
-
-	if (stream) {
-		return new Response(stream, { status: 200 });
-	}
-
-	return new Response("Stream not found or expired.", { status: 404 });
 }

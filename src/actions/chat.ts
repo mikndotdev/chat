@@ -51,12 +51,15 @@ export async function startChat({
 export const addMessage = async ({
 	message,
 	id,
+	attachment,
 }: {
 	message: {
 		content: string;
 		role: "user" | "assistant" | "system" | "data";
+		attachment?: string;
 	};
 	id: string;
+	attachment?: string;
 }) => {
 	const { claims } = await getLogtoContext(logtoConfig);
 
@@ -78,6 +81,9 @@ export const addMessage = async ({
 			userId: claims.sub,
 			content: message.content,
 			role: message.role,
+			attachments: attachment
+				? { connect: [{ id: attachment }] }
+				: undefined,
 		},
 	});
 

@@ -40,8 +40,9 @@ import {
 	Bot,
 	Share,
 	House,
-	PlusCircle,
 	File,
+	Image,
+	MessageCircle,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -66,15 +67,29 @@ export const ChatSidebar = ({ data }: Props) => {
 	return (
 		<Sidebar collapsible="icon" className={"bg-neutral text-base-content"}>
 			<SidebarHeader className="group-data-[collapsible=icon]:hidden">
-				<Link href="/chat">
-					<SidebarMenuButton
-						className="flex items-center gap-2 p-4 text-lg font-semibold text-center justify-center"
-						size="lg"
-					>
-						<PlusCircle className="text-muted-foreground" />
-						<span className="hidden sm:inline">New Chat</span>
-					</SidebarMenuButton>
-				</Link>
+				<span className="text-center font-bold text-xl">
+					Create New
+				</span>
+				<div className={"flex flex-row w-full justify-center"}>
+					<Link href="/chat">
+						<SidebarMenuButton
+							className="flex items-center gap-2 p-4 text-lg font-semibold text-center justify-center w-full"
+							size="lg"
+						>
+							<MessageCircle className="text-muted-foreground" />
+							<span className="hidden sm:inline">Chat</span>
+						</SidebarMenuButton>
+					</Link>
+					<Link href="/image">
+						<SidebarMenuButton
+							className="flex items-center gap-2 p-4 text-lg font-semibold text-center justify-center w-full"
+							size="lg"
+						>
+							<span className="hidden sm:inline">Image</span>
+							<Image className="text-muted-foreground" />
+						</SidebarMenuButton>
+					</Link>
+				</div>
 			</SidebarHeader>
 
 			<SidebarContent>

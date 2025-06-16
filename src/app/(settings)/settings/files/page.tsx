@@ -59,6 +59,8 @@ export default async function Home() {
 		fileType: file.url.split(".").pop() || "unknown",
 	}));
 
+	console.log(attachmentsWithFileType);
+
 	return (
 		<div className="container mx-auto p-4">
 			<h1 className={"text-base-content text-4xl"}>Files</h1>
@@ -66,7 +68,7 @@ export default async function Home() {
 				Attachments
 			</h2>
 			<div className="grid gap-2 grid-cols-4">
-				{attachments.map((attachment) => (
+				{attachmentsWithFileType.map((attachment) => (
 					<div key={attachment.id} className="p-4 border rounded">
 						{attachment.fileType === "jpg" ||
 						attachment.fileType === "png" ||
@@ -78,12 +80,17 @@ export default async function Home() {
 							/>
 						) : (
 							<div className="w-full h-32 bg-gray-200 flex items-center justify-center mb-2">
-								<span className="text-gray-500">PDF</span>
+								<span className="text-gray-500">
+									Preview unavailable
+								</span>
 							</div>
 						)}
 						<p className="text-sm text-base-content/50 text-center">
 							Uploaded at:{" "}
 							{new Date(attachment.createdAt).toLocaleString()}
+						</p>
+						<p className="text-sm text-base-content/70 text-center">
+							File Type: {attachment.fileType}
 						</p>
 						<a
 							href={attachment.url}

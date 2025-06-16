@@ -12,17 +12,7 @@ interface ChatInputProps {
 	id?: string;
 	model?: string;
 	status?: "submitted" | "streaming" | "ready" | "error";
-	models?: {
-		name: string;
-		description: string;
-		id: string;
-		icon: string;
-		provider: string;
-		providerName: string;
-		freeTier: boolean;
-		experimental: boolean;
-		supports_attachment?: boolean;
-	}[];
+	models?: any[];
 	customModels?: any[];
 	openRouterModels?: any[];
 	openRouterEnabled?: boolean;
@@ -47,6 +37,7 @@ export const ChatInput = ({
 	const [selectedModel, setSelectedModel] = useState(model);
 	const [modelType, setModelType] = useState("");
 	const [attachment, setAttachment] = useState<File | null>(null);
+	const [attachmentId, setAttachmentId] = useState<string | null>(null);
 	const [attachmentUrl, setAttachmentUrl] = useState("");
 	const [uploading, setUploading] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -57,7 +48,6 @@ export const ChatInput = ({
 		: null;
 	const isInChat = Boolean(chatId);
 
-	// Find the selected model object
 	const selectedModelObj = models?.find((m) => m.name === selectedModel);
 
 	const sendMessage = async (e: FormEvent) => {
@@ -83,6 +73,17 @@ export const ChatInput = ({
 			if (isInChat) {
 				if (attachment) {
 					if (handleSubmit) {
+						addMessage({
+							message: {
+								content: message,
+								role: "user",
+								attachment: attachmentId || "",
+							},
+							id: chatId || "",
+						}).catch((error) => {
+							toast.error("Failed to send message.");
+							console.error("Error sending message:", error);
+						});
 						handleSubmit(e, {
 							experimental_attachments: [
 								{
@@ -96,6 +97,16 @@ export const ChatInput = ({
 					setAttachment(null);
 				} else {
 					if (handleSubmit) {
+						addMessage({
+							message: {
+								content: message,
+								role: "user",
+							},
+							id: chatId || "",
+						}).catch((error) => {
+							toast.error("Failed to send message.");
+							console.error("Error sending message:", error);
+						});
 						handleSubmit(e);
 					}
 				}
@@ -201,39 +212,52 @@ export const ChatInput = ({
 									<div className="col-span-2 flex flex-col items-center justify-center py-8">
 										{openRouterEnabled ? (
 											<>
-												{openRouterModels && openRouterModels.length > 0 ? (
+												{openRouterModels &&
+												openRouterModels.length > 0 ? (
 													<div className="grid grid-cols-2 gap-2 w-full">
-														{openRouterModels.map((model) => (
-															<div
-																key={model.id}
-																className={`card bg-primary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
-																onClick={() => {
-																	setSelectedModel(model.name);
-																	setModelType("openrouter");
-																	setOpen(false);
-																}}
-															>
+														{openRouterModels.map(
+															(model) => (
 																<div
-																	className={
-																		"card-body p-3 justify-left w-full"
+																	key={
+																		model.id
 																	}
+																	className={`card bg-primary w-full flex items-center justify-start gap-3 ${selectedModel === model.name ? "btn-active" : ""}`}
+																	onClick={() => {
+																		setSelectedModel(
+																			model.name,
+																		);
+																		setModelType(
+																			"openrouter",
+																		);
+																		setOpen(
+																			false,
+																		);
+																	}}
 																>
 																	<div
 																		className={
-																			"card-title flex flex-row justify-center items-center space-x-2"
+																			"card-body p-3 justify-left w-full"
 																		}
 																	>
-																		<span
+																		<div
 																			className={
-																				"font-semibold text-md text-base-content"
+																				"card-title flex flex-row justify-center items-center space-x-2"
 																			}
 																		>
-																			{model.name}
-																		</span>
+																			<span
+																				className={
+																					"font-semibold text-md text-base-content"
+																				}
+																			>
+																				{
+																					model.name
+																				}
+																			</span>
+																		</div>
 																	</div>
 																</div>
-															</div>
-														))}
+															),
+														)}
 													</div>
 												) : (
 													<span className="text-base-content/70">
@@ -243,7 +267,9 @@ export const ChatInput = ({
 											</>
 										) : (
 											<span className="text-base-content/70">
-												OpenRouter is not configured. Please add your OpenRouter API key in settings.
+												OpenRouter is not configured.
+												Please add your OpenRouter API
+												key in settings.
 											</span>
 										)}
 									</div>
@@ -340,6 +366,7 @@ export const ChatInput = ({
 												chatId,
 											);
 											setAttachmentUrl(upload.url);
+											setAttachmentId(upload.id);
 											setUploading(false);
 											toast.success(
 												"Attachment added successfully!",

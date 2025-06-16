@@ -50,7 +50,7 @@ export async function addAttachment(data: FormData, chatId: string) {
 
 	const url = `${process.env.S3_PUBLIC_URL}/${key}`;
 
-	await prisma.attachment.create({
+	const uploaded = await prisma.attachment.create({
 		data: {
 			url: url,
 			chat: { connect: { id: chatId } },
@@ -58,5 +58,5 @@ export async function addAttachment(data: FormData, chatId: string) {
 		},
 	});
 
-	return { key, url };
+	return uploaded;
 }

@@ -62,25 +62,42 @@ export default async function Home({
 		orderBy: { createdAt: "asc" },
 	});
 
+	const modelsArray = Object.entries(Models).flatMap(
+		([providerKey, provider]) =>
+			provider.models.map((model) => ({
+				...model,
+				provider: providerKey,
+				providerName: provider.name,
+				icon: provider.icon,
+			})),
+	);
+
 	const modelInfo = ModelInfoFromID[chat.model] || chat.model;
+
+	// In src/app/(chat)/chat/[id]/page.tsx
+	const formattedMessages = messages.map((message) => ({
+		id: message.id,
+		content: message.content,
+		role: message.role as "user" | "assistant" | "system",
+		createdAt: message.createdAt,
+	}));
 
 	return (
 		<main className="container mx-auto p-4">
-			<h1 className="text-2xl font-bold mb-2">
-				{chat.name || "Untitled Chat"}
-			</h1>
-			<div className="mb-4">
-				<p>
-					<strong>Model:</strong> {modelInfo?.name || chat.model || "Unknown Model"}
-				</p>
-				<ChatMeta createdAt={chat.createdAt.toISOString()} />
-			</div>
+			<ChatMeta
+				createdAt={chat.createdAt.toISOString()}
+				model={modelInfo?.name || chat.model || "Unknown Model"}
+				title={chat.name || "Untitled Chat"}
+				id={id}
+			/>
 			<div className="space-y-4">
 				<ChatContainer
 					id={id}
 					avatar={claims?.picture || ""}
-					initialMessages={messages as Message[]}
+					initialMessages={formattedMessages}
 					model={chat.model}
+					//@ts-ignore
+					models={modelsArray}
 				/>
 			</div>
 		</main>

@@ -163,7 +163,7 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
 					className="card bg-base-200 shadow flex flex-row items-center p-4"
 				>
 					<div>
-						<h3 className="font-bold mb-2">{model.name}</h3>
+						<h3 className="font-bold">{model.name}</h3>
 						{model.description && (
 							<p className="text-sm text-base-content/70">
 								{model.description}
