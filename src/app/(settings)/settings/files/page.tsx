@@ -23,7 +23,7 @@ type File = {
 	createdAt: Date;
 	chatId?: string;
 	name?: string;
-	description?: string;
+	description?: string | null;
 	fileType?: string;
 };
 
@@ -58,8 +58,6 @@ export default async function Home() {
 		...file,
 		fileType: file.url.split(".").pop() || "unknown",
 	}));
-
-	console.log(attachmentsWithFileType);
 
 	return (
 		<div className="container mx-auto p-4">
@@ -127,18 +125,63 @@ export default async function Home() {
 					</p>
 				)}
 			</div>
-			<h2 className={"text-base-content text-xl mt-5 mb-2"}>Files</h2>
-			<div className="grid space-y-2">
-				{files.map((file) => (
-					<div key={file.id} className="p-4 border rounded">
-						<h3 className="text-lg font-semibold">{file.name}</h3>
-						<p className="text-sm text-base-content/70">
-							{file.description || "No description"}
-						</p>
-						<p className="text-sm text-base-content/50">
+			<h2 className={"text-base-content text-xl mt-5 mb-2"} id={"files"}>
+				Files
+			</h2>
+			<div className="grid gap-2 grid-cols-3">
+				{filesWithFileType.map((file) => (
+					<div
+						key={file.id}
+						className="card bg-base-200 shadow-xl items-center p-4"
+					>
+						{file.fileType === "jpg" ||
+						file.fileType === "png" ||
+						file.fileType === "jpeg" ? (
+							<img
+								src={file.url}
+								alt={file.name || file.url}
+								className="w-full h-64 object-cover mb-2"
+							/>
+						) : (
+							<div className="w-full h-32 bg-gray-200 flex items-center justify-center mb-2">
+								<span className="text-gray-500">
+									Preview unavailable
+								</span>
+							</div>
+						)}
+						<p className="text-sm text-base-content/50 text-center">
 							Uploaded at:{" "}
 							{new Date(file.createdAt).toLocaleString()}
 						</p>
+						<p className="text-sm text-base-content/70 text-center">
+							{file.description}
+						</p>
+						<a
+							href={file.url}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<div className="flex items-center justify-center mt-2">
+								<button className="btn btn-primary">
+									{file.fileType === "jpg" ||
+									file.fileType === "png" ||
+									file.fileType === "jpeg" ? (
+										<Image className="mr-2" />
+									) : (
+										<Download className="mr-2" />
+									)}
+									Download
+								</button>
+								{file.chatId && (
+									<Link
+										href={`/chat/${file.chatId}`}
+										className="ml-2 btn btn-secondary"
+									>
+										View Chat
+									</Link>
+								)}
+							</div>
+						</a>
 					</div>
 				))}
 				{files.length === 0 && (

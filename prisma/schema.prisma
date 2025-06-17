@@ -90,9 +90,10 @@ model Stream {
 }
 
 model File {
-  id        String   @id @default(cuid())
-  userId    String
-  url       String
-  createdAt DateTime @default(now())
-  User      User     @relation(fields: [userId], references: [id])
+  id          String   @id @default(cuid())
+  description String?
+  userId      String
+  url         String
+  createdAt   DateTime @default(now())
+  User        User     @relation(fields: [userId], references: [id])
 }

@@ -112,7 +112,7 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
 						className="input input-bordered w-full"
 						placeholder="openai/gpt-4.1"
 					/>
-					<div className="card bg-base-200 shadow flex p-4 mt-4">
+					<div className="card bg-base-200 shadow-xl flex p-4 mt-4">
 						{loading ? (
 							<div className="flex flex-col items-center justify-center">
 								<span className="loading loading-spinner text-center" />
@@ -160,7 +160,7 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
 			{modelsList.map((model) => (
 				<div
 					key={model.id}
-					className="card bg-base-200 shadow flex flex-row items-center p-4"
+					className="card bg-base-200 shadow-xl flex flex-row items-center p-4"
 				>
 					<div>
 						<h3 className="font-bold">{model.name}</h3>
@@ -183,7 +183,7 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
 				</div>
 			))}
 			<div
-				className="card bg-base-200 shadow flex flex-row justify-center items-center p-4 gap-2"
+				className="card bg-base-200 shadow-xl flex flex-row justify-center items-center p-4 gap-2"
 				onClick={() => setOpen(true)}
 			>
 				<PlusCircle className="w-6 h-6 text-base-content" />

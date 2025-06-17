@@ -27,22 +27,5 @@
 				"size": "1024x768"
 			}
 		]
-	},
-	"google": {
-		"name": "Google",
-		"description": "Google's AI models from Google AI Studio.",
-		"icon": "/icons/google.png",
-		"models": [
-			{
-				"name": "Imagen v3",
-				"id": "imagen-3.0-generate-002",
-				"aspect_ratio": "16:9"
-			},
-			{
-				"name": "Imagen v3 Fast",
-				"id": "imagen-3.0-fast-generate-001",
-				"aspect_ratio": "16:9"
-			}
-		]
 	}
 }

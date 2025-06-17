@@ -10,7 +10,6 @@ export default async function ShareLayout({
 }: {
 	children: React.ReactNode;
 }) {
-
 	return (
 		<SidebarProvider>
 			<SidebarInset>{children}</SidebarInset>
