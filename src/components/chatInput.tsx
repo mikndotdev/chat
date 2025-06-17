@@ -62,7 +62,9 @@ export const ChatInput = ({
 		try {
 			if (!isInChat) {
 				if (!message) {
-					toast.error("Please enter a message before starting a chat.");
+					toast.error(
+						"Please enter a message before starting a chat.",
+					);
 					return;
 				}
 				// Create the chat and navigate to the chat page
@@ -82,17 +84,24 @@ export const ChatInput = ({
 				router.push(`/chat/${chat.id}`);
 			} else {
 				// Handle existing chat message
+				// In ChatInput.tsx, modify the sendMessage function when dealing with attachments:
 				if (attachment) {
 					if (handleSubmit) {
-						await addMessage({
-							message: {
-								content: message,
-								role: "user",
-								attachment: attachmentId || "",
-							},
-							id: chatId || "",
-						});
+						const attachmentData = {
+							url: attachmentUrl,
+							name: attachment.name,
+							contentType: attachment.type,
+						};
 
+						// Create the message with attachment to be displayed immediately
+						const messageWithAttachment = {
+							content: message,
+							role: "user" as const,
+							id: Date.now().toString(),
+							attachment: attachmentData,
+						};
+
+						// Pass the message data to handleSubmit, but DON'T call addMessage separately
 						handleSubmit(e, {
 							experimental_attachments: [
 								{
@@ -101,20 +110,24 @@ export const ChatInput = ({
 									url: attachmentUrl,
 								},
 							] as Attachment[],
+							messageWithAttachment,
+							attachmentId, // Pass the attachmentId to be used by backend
 						});
 					}
 					setAttachment(null);
 				} else {
 					if (handleSubmit) {
-						await addMessage({
-							message: {
-								content: message,
-								role: "user",
-							},
-							id: chatId || "",
-						});
+						// Create a regular message object for immediate UI display
+						const regularMessage = {
+							content: message,
+							role: "user" as const,
+							id: Date.now().toString()
+						};
 
-						handleSubmit(e);
+						// Submit with the message data for UI updates
+						handleSubmit(e, {
+							messageWithAttachment: regularMessage // Pass regular messages with the same property name
+						});
 					}
 				}
 

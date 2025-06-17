@@ -2,7 +2,9 @@
 import { useChat, Message as BaseMessage } from "@ai-sdk/react";
 import { ChatPage } from "./chat";
 import { ChatInput } from "./chatInput";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
+import { addMessage } from "@/actions/chat";
+import { toast } from "sonner";
 
 // Extend the Message type to include attachment
 interface Message extends BaseMessage {
@@ -57,12 +59,68 @@ export const ChatContainer = ({
 	const [internalStatus, setInternalStatus] = useState<ChatStatus>("ready");
 	const [isInitialized, setIsInitialized] = useState(false);
 
-	// Handle initial message loading and auto-processing
+	const handleFormSubmit = async (e: FormEvent, extra?: any) => {
+		e.preventDefault();
+
+		const form = e.target as HTMLFormElement;
+		const input = form.querySelector("input") as HTMLInputElement;
+		const message = input.value.trim();
+
+		if (!message) return;
+
+		try {
+			const messageData = {
+				content: message,
+				role: "user",
+				attachment: extra?.attachmentId || undefined,
+			};
+
+			await addMessage({
+				//@ts-ignore
+				message: messageData,
+				id: id || "",
+			});
+
+			if (extra?.messageWithAttachment) {
+				// Add message to UI immediately
+				setMessages((prevMessages) => [
+					...prevMessages,
+					extra.messageWithAttachment,
+				]);
+
+				const currentMessagesCount = messages.length;
+
+				// Call handleSubmit with attachment info
+				handleSubmit(e, {
+					experimental_attachments: extra.experimental_attachments,
+				});
+
+				setTimeout(() => {
+					setMessages(currentMessages => {
+						if (currentMessages.length > currentMessagesCount + 1) {
+							return currentMessages.slice(0, -1);
+						}
+						return currentMessages;
+					});
+				}, 100);
+			} else {
+				handleSubmit(e);
+			}
+
+			if (input) input.value = "";
+			if (handleInputChange) {
+				handleInputChange({ target: { value: "" } } as any);
+			}
+		} catch (error) {
+			console.error("Error sending message:", error);
+			toast.error("Failed to send message");
+		}
+	};
+
 	useEffect(() => {
 		if (!isInitialized && initialMessages?.length > 0) {
 			setIsInitialized(true);
 
-			// Process initial messages to ensure attachments are included
 			const processedMessages = initialMessages.map((msg) => ({
 				...msg,
 				attachment: msg.attachment || undefined,
@@ -85,15 +143,12 @@ export const ChatContainer = ({
 		}
 	}, [initialMessages, isInitialized, append, setMessages]);
 
-	// Rest of your code remains the same
-	// Sync status from useChat with our internal status
 	useEffect(() => {
 		if (internalStatus !== "error" || status === "error") {
 			setInternalStatus(status);
 		}
 	}, [status]);
 
-	// Handle error detection for unresponded user messages
 	useEffect(() => {
 		if (
 			messages.length > 0 &&
@@ -125,13 +180,11 @@ export const ChatContainer = ({
 		setRetryCount((prev) => prev + 1);
 		setInternalStatus("ready");
 
-		// Find the last user message
 		const lastUserIndex = messages.map((m) => m.role).lastIndexOf("user");
 
 		if (lastUserIndex !== -1) {
 			const userMsg = messages[lastUserIndex];
 
-			// Reappend the user message to trigger a new response
 			append({
 				id: `retry-${retryCount}-${userMsg.id || Date.now()}`,
 				content: userMsg.content,
@@ -158,7 +211,7 @@ export const ChatContainer = ({
 					models={models}
 					input={input}
 					handleInputChange={handleInputChange}
-					handleSubmit={handleSubmit}
+					handleSubmit={handleFormSubmit}
 					status={internalStatus}
 				/>
 			</div>
