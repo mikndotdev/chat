@@ -1,8 +1,21 @@
 "use client";
-import { useChat, Message } from "@ai-sdk/react";
+import { useChat, Message as BaseMessage } from "@ai-sdk/react";
 import { ChatPage } from "./chat";
 import { ChatInput } from "./chatInput";
 import { useEffect, useState } from "react";
+
+// Extend the Message type to include attachment
+interface Message extends BaseMessage {
+	attachment?: string | undefined;
+}
+
+// Type for message creation that includes attachment
+interface CreateMessage {
+	role: "user" | "assistant" | "system";
+	content: string;
+	id?: string;
+	attachment?: string;
+}
 
 // Define types for the component props
 interface ChatContainerProps {
@@ -49,27 +62,30 @@ export const ChatContainer = ({
 		if (!isInitialized && initialMessages?.length > 0) {
 			setIsInitialized(true);
 
-			// Check if this is a single user message with no response yet
-			if (
-				initialMessages.length === 1 &&
-				initialMessages[0].role === "user"
-			) {
-				const firstMessage = initialMessages[0];
+			// Process initial messages to ensure attachments are included
+			const processedMessages = initialMessages.map((msg) => ({
+				...msg,
+				attachment: msg.attachment || undefined,
+			}));
 
-				// Use append directly to trigger the LLM response
+			if (
+				processedMessages.length === 1 &&
+				processedMessages[0].role === "user"
+			) {
+				const firstMessage = processedMessages[0];
 				append({
 					role: "user",
 					content: firstMessage.content,
 					id: firstMessage.id,
-				});
+					attachment: firstMessage.attachment,
+				} as CreateMessage);
 			} else {
-				// If there are multiple messages or it's not just a user message,
-				// load them all at once
-				setMessages(initialMessages);
+				setMessages(processedMessages as any);
 			}
 		}
 	}, [initialMessages, isInitialized, append, setMessages]);
 
+	// Rest of your code remains the same
 	// Sync status from useChat with our internal status
 	useEffect(() => {
 		if (internalStatus !== "error" || status === "error") {

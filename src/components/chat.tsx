@@ -1,13 +1,21 @@
 "use client";
 import AIIcon from "@/assets/img/ai.png";
-import { Message } from "@ai-sdk/react";
+import { Message as BaseMessage } from "@ai-sdk/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useEffect, useRef } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { motion, AnimatePresence } from "motion/react";
-import { useRouter } from "next/navigation";
+import { File } from "lucide-react";
+
+interface Message extends BaseMessage {
+	attachment?: {
+		url: string;
+		name?: string;
+		contentType?: string;
+	};
+}
 
 interface ChatProps {
 	id: string;
@@ -19,7 +27,6 @@ interface ChatProps {
 
 export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
 	const bottomRef = useRef<HTMLDivElement>(null);
-	const router = useRouter();
 
 	useEffect(() => {
 		if (bottomRef.current) {
@@ -32,7 +39,42 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
 
 	const lastMsgId = msg.length > 0 ? msg[msg.length - 1].id : null;
 
-	// Add loading message when submitted but not yet streaming
+	//@ts-ignore
+	const renderAttachment = (attachment) => {
+		if (!attachment) return null;
+
+		if (
+			attachment.url.includes(".jpg") ||
+			attachment.url.includes(".png") ||
+			attachment.url.includes(".jpeg")
+		) {
+			return (
+				<div className="my-2">
+					<img
+						src={attachment.url}
+						alt="Attachment"
+						className="max-w-full max-h-64 rounded-lg"
+					/>
+				</div>
+			);
+		} else if (attachment.url.includes(".pdf")) {
+			return (
+				<div className="my-2 w-1/4">
+					<a
+						href={attachment.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="btn btn-sm btn-outline flex items-center gap-2"
+					>
+						<span>View PDF</span>
+						<File className="h-4 w-4" />
+					</a>
+				</div>
+			);
+		}
+		return null;
+	};
+
 	const showLoadingMessage =
 		status === "submitted" &&
 		(msg.length === 0 || msg[msg.length - 1].role === "user");
@@ -50,12 +92,50 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
 		msg[msg.length - 1].role === "user" &&
 		status === "error";
 
+	const extractReasoning = (
+		parts: any[],
+	): { reasoning: string | null; cleanedParts: any[] } => {
+		if (!parts || parts.length === 0)
+			return { reasoning: null, cleanedParts: parts };
+
+		const cleanedParts = [];
+		let reasoning: string | null = null;
+
+		for (const part of parts) {
+			if (part.type === "text") {
+				const thinkMatch = part.text.match(
+					/<think>([\s\S]*?)<\/think>/,
+				);
+
+				if (thinkMatch) {
+					reasoning = thinkMatch[1].trim();
+					const cleanedText = part.text
+						.replace(/<think>[\s\S]*?<\/think>/, "")
+						.trim();
+					if (cleanedText) {
+						cleanedParts.push({ ...part, text: cleanedText });
+					}
+				} else {
+					cleanedParts.push(part);
+				}
+			} else {
+				cleanedParts.push(part);
+			}
+		}
+
+		return { reasoning, cleanedParts };
+	};
+
 	return (
-		<div>
-			<div className="mb-24">
+		<div className="flex flex-col w-full h-full overflow-y-auto">
+			<div className="flex-grow p-4">
 				<AnimatePresence>
 					{msg.map((message) => {
 						const isLast = message.id === lastMsgId;
+						const { reasoning, cleanedParts } = extractReasoning(
+							message.parts || [],
+						);
+
 						return (
 							<motion.div
 								key={message.id}
@@ -91,8 +171,23 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
 											<span className="loading loading-spinner loading-lg" />
 										</div>
 									)}
-								<div className="flex flex-col">
-									{message?.parts?.map((part, i) => {
+								<div className="flex flex-col w-full">
+									{reasoning && message.role !== "user" && (
+										<div className="collapse collapse-arrow bg-base-100 border border-base-300 mb-2">
+											<input
+												type="radio"
+												name={`reasoning-${message.id}`}
+											/>
+											<div className="collapse-title font-semibold">
+												Reasoning
+											</div>
+											<div className="collapse-content text-sm">
+												{reasoning}
+											</div>
+										</div>
+									)}
+
+									{(cleanedParts || []).map((part, i) => {
 										switch (part.type) {
 											case "text":
 												return (
@@ -105,6 +200,44 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
 																remarkGfm,
 															]}
 															components={{
+																table: ({
+																	children,
+																}) => (
+																	<div className="overflow-x-auto my-4">
+																		<table className="table table-zebra table-bordered border-collapse border border-base-300 w-full">
+																			{
+																				children
+																			}
+																		</table>
+																	</div>
+																),
+																thead: ({
+																	children,
+																}) => (
+																	<thead className="bg-base-200">
+																		{
+																			children
+																		}
+																	</thead>
+																),
+																th: ({
+																	children,
+																}) => (
+																	<th className="border border-base-300 px-4 py-2 text-left">
+																		{
+																			children
+																		}
+																	</th>
+																),
+																td: ({
+																	children,
+																}) => (
+																	<td className="border border-base-300 px-4 py-2">
+																		{
+																			children
+																		}
+																	</td>
+																),
 																p: ({
 																	children,
 																}) => (
@@ -169,6 +302,8 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
 												return null;
 										}
 									})}
+									{message.attachment &&
+										renderAttachment(message.attachment)}
 								</div>
 							</motion.div>
 						);
@@ -214,7 +349,8 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
 						</motion.div>
 					)}
 				</AnimatePresence>
-				<div ref={bottomRef} className={"mb-5"} />
+				<div className={"mb-20"} />
+				<div ref={bottomRef} />
 			</div>
 		</div>
 	);

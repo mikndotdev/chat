@@ -2,7 +2,6 @@ import { getLogtoContext } from "@logto/next/server-actions";
 import { logtoConfig } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { Message } from "@ai-sdk/react";
 import Models from "@/consts/models.json";
 import * as React from "react";
 import { ChatContainer } from "@/components/chatContainer";
@@ -60,6 +59,7 @@ export default async function Home({
 	const messages = await prisma.message.findMany({
 		where: { chatId: chat.id },
 		orderBy: { createdAt: "asc" },
+		include: { attachments: true },
 	});
 
 	const modelsArray = Object.entries(Models).flatMap(
@@ -74,12 +74,20 @@ export default async function Home({
 
 	const modelInfo = ModelInfoFromID[chat.model] || chat.model;
 
-	// In src/app/(chat)/chat/[id]/page.tsx
 	const formattedMessages = messages.map((message) => ({
 		id: message.id,
 		content: message.content,
 		role: message.role as "user" | "assistant" | "system",
 		createdAt: message.createdAt,
+		attachment: message.attachments?.[0]
+			? {
+					url: message.attachments[0].url,
+					type:
+						message.attachments[0].url.split(".").pop() ||
+						"unknown",
+					name: `Attachment-${message.attachments[0].id}`,
+				}
+			: undefined,
 	}));
 
 	return (
@@ -94,6 +102,7 @@ export default async function Home({
 				<ChatContainer
 					id={id}
 					avatar={claims?.picture || ""}
+					//@ts-ignore
 					initialMessages={formattedMessages}
 					model={chat.model}
 					//@ts-ignore

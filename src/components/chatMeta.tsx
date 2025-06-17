@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Edit } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-import { renameChat } from "@/actions/settings";
+import { renameChat, deleteChat } from "@/actions/settings";
 
 export function ChatMeta({
 	createdAt,
@@ -11,6 +12,7 @@ export function ChatMeta({
 	title,
 	id,
 }: { createdAt: string; model: string; title: string; id: string }) {
+	const router = useRouter();
 	const localTime = new Date(createdAt).toLocaleString();
 	const [name, setName] = useState(title);
 	const [input, setInput] = useState("");
@@ -32,7 +34,19 @@ export function ChatMeta({
 		}
 		setOpen(false);
 		setInput("");
-	}
+	};
+
+	const handleDelete = async () => {
+		try {
+			await deleteChat(id);
+			toast.success("Chat deleted successfully!");
+			setTimeout(() => {
+				window.location.href = "/chat";
+			}, 1000);
+		} catch (error) {
+			toast.error("Failed to delete chat. Please try again.");
+		}
+	};
 
 	return (
 		<>
@@ -42,9 +56,7 @@ export function ChatMeta({
 				onClose={() => setOpen(false)}
 			>
 				<div className="modal-box">
-					<h3 className="font-bold text-lg">
-						Rename Chat
-					</h3>
+					<h3 className="font-bold text-lg">Rename Chat</h3>
 					<p className="py-4">
 						Please enter a new name for your chat.
 					</p>
@@ -74,15 +86,23 @@ export function ChatMeta({
 				</div>
 			</dialog>
 			<div className={"flex flex-row items-center mb-2"}>
-			<h1 className="text-2xl font-bold">{name}</h1>
-			<button
-				className="btn btn-ghost btn-sm ml-2"
-				onClick={() => {
-					setOpen(true);
-				}}
-			>
-				<Edit className="h-4 w-4" />
-			</button>
+				<h1 className="text-2xl font-bold">{name}</h1>
+				<button
+					className="btn btn-ghost btn-sm ml-2"
+					onClick={() => {
+						setOpen(true);
+					}}
+				>
+					<Edit className="h-4 w-4" />
+				</button>
+				<button
+					className="btn btn-ghost btn-sm ml-2"
+					onClick={() => {
+						handleDelete();
+					}}
+				>
+					<Trash className="h-4 w-4" />
+				</button>
 			</div>
 			<div className="mb-4">
 				<p>

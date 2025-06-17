@@ -75,14 +75,16 @@ export const addMessage = async ({
 		throw new Error("Chat not found or access denied");
 	}
 
+	// Create message with attachment relationship if provided
 	const newMessage = await prisma.message.create({
 		data: {
 			chatId: chat.id,
 			userId: claims.sub,
 			content: message.content,
 			role: message.role,
-			attachments: attachment
-				? { connect: [{ id: attachment }] }
+			loading: message.role === "assistant",
+			attachments: message.attachment
+				? { connect: [{ id: message.attachment }] }
 				: undefined,
 		},
 	});

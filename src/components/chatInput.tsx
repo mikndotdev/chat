@@ -48,7 +48,7 @@ export const ChatInput = ({
 		: null;
 	const isInChat = Boolean(chatId);
 
-	const selectedModelObj = models?.find((m) => m.name === selectedModel);
+	const selectedModelObj = models?.find((m) => m.id === model);
 
 	const sendMessage = async (e: FormEvent) => {
 		e.preventDefault();
@@ -58,32 +58,41 @@ export const ChatInput = ({
 		if (!message) {
 			return;
 		}
-		if (!isInChat) {
-			if (!message) {
-				toast.error("Please enter a message before starting a chat.");
-				return;
-			}
-			const chat = await startChat({
-				model: selectedModel,
-				type: modelType,
-				message,
-			});
-			await router.push(`/chat/${chat.id}`);
-		} else {
-			if (isInChat) {
+
+		try {
+			if (!isInChat) {
+				if (!message) {
+					toast.error("Please enter a message before starting a chat.");
+					return;
+				}
+				// Create the chat and navigate to the chat page
+				const chat = await startChat({
+					model: selectedModel,
+					type: modelType || "provider",
+					message,
+				});
+
+				// Clear input after sending
+				inputEl.value = "";
+				if (handleInputChange) {
+					handleInputChange({ target: { value: "" } } as any);
+				}
+
+				// Navigate to the new chat
+				router.push(`/chat/${chat.id}`);
+			} else {
+				// Handle existing chat message
 				if (attachment) {
 					if (handleSubmit) {
-						addMessage({
+						await addMessage({
 							message: {
 								content: message,
 								role: "user",
 								attachment: attachmentId || "",
 							},
 							id: chatId || "",
-						}).catch((error) => {
-							toast.error("Failed to send message.");
-							console.error("Error sending message:", error);
 						});
+
 						handleSubmit(e, {
 							experimental_attachments: [
 								{
@@ -97,20 +106,27 @@ export const ChatInput = ({
 					setAttachment(null);
 				} else {
 					if (handleSubmit) {
-						addMessage({
+						await addMessage({
 							message: {
 								content: message,
 								role: "user",
 							},
 							id: chatId || "",
-						}).catch((error) => {
-							toast.error("Failed to send message.");
-							console.error("Error sending message:", error);
 						});
+
 						handleSubmit(e);
 					}
 				}
+
+				// Clear input after sending
+				inputEl.value = "";
+				if (handleInputChange) {
+					handleInputChange({ target: { value: "" } } as any);
+				}
 			}
+		} catch (error) {
+			console.error("Error sending message:", error);
+			toast.error("Failed to send message.");
 		}
 	};
 
