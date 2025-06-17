@@ -25,6 +25,7 @@ interface ChatContainerProps {
 	initialMessages: Message[];
 	model: string;
 	models: string[];
+	isPublic?: boolean | false;
 }
 
 type ChatStatus = "ready" | "submitted" | "streaming" | "error" | undefined;
@@ -35,6 +36,7 @@ export const ChatContainer = ({
 	initialMessages,
 	model,
 	models,
+	isPublic,
 }: ChatContainerProps) => {
 	const {
 		messages,
@@ -57,7 +59,10 @@ export const ChatContainer = ({
 	const [internalStatus, setInternalStatus] = useState<ChatStatus>("ready");
 	const [isInitialized, setIsInitialized] = useState(false);
 
+	console.log(isPublic);
+
 	const handleFormSubmit = async (e: FormEvent, extra?: any) => {
+		if (isPublic) return;
 		e.preventDefault();
 
 		const form = e.target as HTMLFormElement;
@@ -107,7 +112,8 @@ export const ChatContainer = ({
 
 			if (
 				processedMessages.length === 1 &&
-				processedMessages[0].role === "user"
+				processedMessages[0].role === "user" &&
+				!isPublic
 			) {
 				const firstMessage = processedMessages[0];
 				append({
@@ -123,12 +129,14 @@ export const ChatContainer = ({
 	}, [initialMessages, isInitialized, append, setMessages]);
 
 	useEffect(() => {
+		if (isPublic) return;
 		if (internalStatus !== "error" || status === "error") {
 			setInternalStatus(status);
 		}
 	}, [status]);
 
 	useEffect(() => {
+		if (isPublic) return;
 		if (
 			messages.length > 0 &&
 			messages[messages.length - 1].role === "user" &&
@@ -156,6 +164,7 @@ export const ChatContainer = ({
 	}, [messages, internalStatus]);
 
 	const handleRetry = () => {
+		if (isPublic) return;
 		setRetryCount((prev) => prev + 1);
 		setInternalStatus("ready");
 
@@ -183,17 +192,19 @@ export const ChatContainer = ({
 				status={internalStatus}
 				onRetry={handleRetry}
 			/>
-			<div className="flex flex-col items-center justify-center">
-				<ChatInput
-					id={id}
-					model={model}
-					models={models}
-					input={input}
-					handleInputChange={handleInputChange}
-					handleSubmit={handleFormSubmit}
-					status={internalStatus}
-				/>
-			</div>
+			{!isPublic && (
+				<div className="flex flex-col items-center justify-center">
+					<ChatInput
+						id={id}
+						model={model}
+						models={models}
+						input={input}
+						handleInputChange={handleInputChange}
+						handleSubmit={handleFormSubmit}
+						status={internalStatus}
+					/>
+				</div>
+			)}
 		</>
 	);
 };

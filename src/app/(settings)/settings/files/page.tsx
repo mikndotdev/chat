@@ -69,7 +69,10 @@ export default async function Home() {
 			</h2>
 			<div className="grid gap-2 grid-cols-4">
 				{attachmentsWithFileType.map((attachment) => (
-					<div key={attachment.id} className="p-4 border rounded">
+					<div
+						key={attachment.id}
+						className="card bg-base-200 shadow-xl items-center p-4"
+					>
 						{attachment.fileType === "jpg" ||
 						attachment.fileType === "png" ||
 						attachment.fileType === "jpeg" ? (

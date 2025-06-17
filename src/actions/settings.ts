@@ -52,3 +52,45 @@ export async function deleteChat(id: string) {
 		where: { id },
 	});
 }
+
+export const shareChat = async (id: string): Promise<void> => {
+	const { claims } = await getLogtoContext(logtoConfig);
+
+	if (!claims) {
+		throw new Error("User not authenticated");
+	}
+
+	const chat = await prisma.chat.findUnique({
+		where: { id },
+	});
+
+	if (!chat || chat.userId !== claims.sub) {
+		throw new Error("Chat not found or access denied");
+	}
+
+	await prisma.chat.update({
+		where: { id },
+		data: { public: true },
+	});
+};
+
+export const unshareChat = async (id: string): Promise<void> => {
+	const { claims } = await getLogtoContext(logtoConfig);
+
+	if (!claims) {
+		throw new Error("User not authenticated");
+	}
+
+	const chat = await prisma.chat.findUnique({
+		where: { id },
+	});
+
+	if (!chat || chat.userId !== claims.sub) {
+		throw new Error("Chat not found or access denied");
+	}
+
+	await prisma.chat.update({
+		where: { id },
+		data: { public: false },
+	});
+};

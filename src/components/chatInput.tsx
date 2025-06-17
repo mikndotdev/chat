@@ -433,7 +433,10 @@ export const ChatInput = ({
 					<button
 						className="btn btn-primary"
 						type="submit"
-						disabled={status !== "ready" && status !== "error"}
+						disabled={
+							(status !== "ready" && status !== "error") ||
+							uploading
+						}
 					>
 						<Send className="text-white" />
 					</button>

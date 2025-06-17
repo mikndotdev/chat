@@ -1,22 +1,51 @@
 "use client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Edit, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Edit, Trash, Link } from "lucide-react";
 
-import { renameChat, deleteChat } from "@/actions/settings";
+import {
+	renameChat,
+	deleteChat,
+	unshareChat,
+	shareChat,
+} from "@/actions/settings";
 
 export function ChatMeta({
 	createdAt,
 	model,
 	title,
 	id,
-}: { createdAt: string; model: string; title: string; id: string }) {
-	const router = useRouter();
+	shared,
+	isPublic,
+}: {
+	createdAt: string;
+	model: string;
+	title: string;
+	id: string;
+	shared: boolean;
+	isPublic?: boolean;
+}) {
 	const localTime = new Date(createdAt).toLocaleString();
 	const [name, setName] = useState(title);
 	const [input, setInput] = useState("");
 	const [open, setOpen] = useState(false);
+	const [isShared, setIsShared] = useState(shared);
+
+	const toggleShare = async () => {
+		try {
+			if (isShared) {
+				await unshareChat(id);
+				setIsShared(false);
+				toast.success("Chat unshared successfully!");
+			} else {
+				await shareChat(id);
+				setIsShared(true);
+				toast.success("Chat shared successfully!");
+			}
+		} catch (error) {
+			toast.error("Failed to toggle chat sharing. Please try again.");
+		}
+	};
 
 	const handleRename = async () => {
 		if (!input) {
@@ -87,22 +116,53 @@ export function ChatMeta({
 			</dialog>
 			<div className={"flex flex-row items-center mb-2"}>
 				<h1 className="text-2xl font-bold">{name}</h1>
-				<button
-					className="btn btn-ghost btn-sm ml-2"
-					onClick={() => {
-						setOpen(true);
-					}}
-				>
-					<Edit className="h-4 w-4" />
-				</button>
-				<button
-					className="btn btn-ghost btn-sm ml-2"
-					onClick={() => {
-						handleDelete();
-					}}
-				>
-					<Trash className="h-4 w-4" />
-				</button>
+				<>
+					{!isPublic && (
+						<>
+							<button
+								className="btn btn-ghost btn-sm ml-2"
+								onClick={() => {
+									setOpen(true);
+								}}
+							>
+								<Edit className="h-4 w-4" />
+							</button>
+							<button
+								className="btn btn-ghost btn-sm ml-2"
+								onClick={() => {
+									handleDelete();
+								}}
+							>
+								<Trash className="h-4 w-4" />
+							</button>
+							{isShared && (
+								<button
+									className="btn btn-ghost btn-sm ml-2"
+									onClick={() => {
+										navigator.clipboard.writeText(
+											`${window.location.origin}/share/${id}`,
+										);
+										toast.success(
+											"Share link copied to clipboard!",
+										);
+									}}
+								>
+									<Link className="h-4 w-4" />
+								</button>
+							)}
+						</>
+					)}
+				</>
+				{!isPublic && (
+					<div className="flex items-center ml-2">
+						<button
+							className={`btn btn-sm ${isShared ? "btn-primary" : "btn-secondary"}`}
+							onClick={toggleShare}
+						>
+							{isShared ? "Unshare Chat" : "Share Chat"}
+						</button>
+					</div>
+				)}
 			</div>
 			<div className="mb-4">
 				<p>

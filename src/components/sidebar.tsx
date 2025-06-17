@@ -3,6 +3,9 @@
 import * as React from "react";
 
 import Link from "next/link";
+import Image from "next/image";
+
+import KawaiiLogo from "@/assets/img/mikan-vtube.svg";
 
 import {
 	SidebarProvider,
@@ -41,7 +44,7 @@ import {
 	Share,
 	House,
 	File,
-	Image,
+	Image as ImageIcon,
 	MessageCircle,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -67,9 +70,6 @@ export const ChatSidebar = ({ data }: Props) => {
 	return (
 		<Sidebar collapsible="icon" className={"bg-neutral text-base-content"}>
 			<SidebarHeader className="group-data-[collapsible=icon]:hidden">
-				<span className="text-center font-bold text-xl">
-					Create New
-				</span>
 				<div className={"flex flex-row w-full justify-center"}>
 					<Link href="/chat">
 						<SidebarMenuButton
@@ -86,7 +86,7 @@ export const ChatSidebar = ({ data }: Props) => {
 							size="lg"
 						>
 							<span className="hidden sm:inline">Image</span>
-							<Image className="text-muted-foreground" />
+							<ImageIcon className="text-muted-foreground" />
 						</SidebarMenuButton>
 					</Link>
 				</div>

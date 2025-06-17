@@ -6,6 +6,11 @@ import Models from "@/consts/models.json";
 import * as React from "react";
 import { ChatContainer } from "@/components/chatContainer";
 import { ChatMeta } from "@/components/chatMeta";
+import Image from "next/image";
+import Link from "next/link";
+
+import UserIcon from "@/assets/img/user.png";
+import Logo from "@/assets/img/mikan-vtube.svg";
 
 const ModelInfoFromID: Record<string, { name: string; description: string }> =
 	Object.entries(Models)
@@ -29,15 +34,40 @@ const ModelInfoFromID: Record<string, { name: string; description: string }> =
 			{},
 		);
 
-export default async function Home({
+export async function generateMetadata({
 	params,
 }: { params: Promise<{ id: string }> }) {
-	const { claims } = await getLogtoContext(logtoConfig);
-	const { id } = await params;
+	const id = (await params).id;
 
-	if (!claims) {
-		await redirect("/login");
+	const chat = await prisma.chat.findUnique({
+		where: { id },
+		include: {
+			messages: {
+				orderBy: { createdAt: "asc" },
+			},
+		},
+	});
+
+	if (!chat || !chat.public) {
+		return {
+			title: "Chat not found",
+			description: "The requested chat does not exist or is not public.",
+		};
 	}
+
+	const modelInfo = ModelInfoFromID[chat.model] || { name: "Unknown Model" };
+
+	return {
+		title: `MD Chat - ${chat.name || "Untitled Chat"}`,
+		description: `Chat using ${modelInfo.name}. Read it on MD Chat!`,
+	};
+}
+
+export default async function SharePage({
+	params,
+}: { params: Promise<{ id: string }> }) {
+	const { id } = await params;
+	const { claims } = await getLogtoContext(logtoConfig);
 
 	const chat = await prisma.chat.findUnique({
 		where: { id },
@@ -52,8 +82,12 @@ export default async function Home({
 		return notFound();
 	}
 
-	if (chat.userId !== claims?.sub) {
+	if (!chat.public) {
 		return notFound();
+	}
+
+	if (chat.userId == claims?.sub) {
+		await redirect(`/chat/${id}`);
 	}
 
 	const messages = await prisma.message.findMany({
@@ -94,17 +128,51 @@ export default async function Home({
 				title={chat.name || "Untitled Chat"}
 				id={id}
 				shared={chat.public}
+				isPublic={true}
 			/>
 			<div className="space-y-4">
 				<ChatContainer
 					id={id}
-					avatar={claims?.picture || ""}
+					avatar={UserIcon.src}
 					//@ts-ignore
 					initialMessages={formattedMessages}
 					model={chat.model}
 					//@ts-ignore
 					models={modelsArray}
+					isPublic={true}
 				/>
+			</div>
+			<div className="flex items-center w-full card bg-base-200 shadow-xl p-4 mt-8">
+				<div className="flex flex-row justify-between items-center w-full">
+					<div className="flex flex-row items-center">
+						<p
+							className={
+								"text-base-content/70 text-sm mr-2 font-bold text-xl"
+							}
+						>
+							Generated on
+						</p>
+						<Image
+							src={Logo}
+							alt="MikanDev Logo"
+							width={200}
+							height={200}
+							className="rounded-lg w-1/6 h-auto"
+						/>
+						<p
+							className={
+								"text-base-content/70 text-sm ml-2 font-bold text-xl"
+							}
+						>
+							Chat
+						</p>
+					</div>
+					<Link href={`/chat`} className="">
+						<button className={"btn btn-secondary"}>
+							Try it now!
+						</button>
+					</Link>
+				</div>
 			</div>
 		</main>
 	);
