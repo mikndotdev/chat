@@ -19,7 +19,6 @@ interface CreateMessage {
 	attachment?: string;
 }
 
-// Define types for the component props
 interface ChatContainerProps {
 	id: string;
 	avatar: string;
@@ -28,7 +27,6 @@ interface ChatContainerProps {
 	models: string[];
 }
 
-// Define the valid status types
 type ChatStatus = "ready" | "submitted" | "streaming" | "error" | undefined;
 
 export const ChatContainer = ({
@@ -76,35 +74,17 @@ export const ChatContainer = ({
 			};
 
 			await addMessage({
-				//@ts-ignore
+				// @ts-ignore
 				message: messageData,
 				id: id || "",
 			});
 
 			if (extra?.messageWithAttachment) {
-				// Add message to UI immediately
-				setMessages((prevMessages) => [
-					...prevMessages,
-					extra.messageWithAttachment,
-				]);
-
-				const currentMessagesCount = messages.length;
-
-				// Call handleSubmit with attachment info
-				handleSubmit(e, {
+				await handleSubmit(e, {
 					experimental_attachments: extra.experimental_attachments,
 				});
-
-				setTimeout(() => {
-					setMessages(currentMessages => {
-						if (currentMessages.length > currentMessagesCount + 1) {
-							return currentMessages.slice(0, -1);
-						}
-						return currentMessages;
-					});
-				}, 100);
 			} else {
-				handleSubmit(e);
+				await handleSubmit(e);
 			}
 
 			if (input) input.value = "";
@@ -123,7 +103,6 @@ export const ChatContainer = ({
 
 			const processedMessages = initialMessages.map((msg) => ({
 				...msg,
-				attachment: msg.attachment || undefined,
 			}));
 
 			if (
@@ -170,7 +149,7 @@ export const ChatContainer = ({
 					);
 					setInternalStatus("error");
 				}
-			}, 15000);
+			}, 1500);
 
 			return () => clearTimeout(timer);
 		}

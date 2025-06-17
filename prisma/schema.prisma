@@ -68,6 +68,7 @@ model Attachment {
   url       String
   createdAt DateTime @default(now())
   chatId    String
+  filetype  String?
   chat      Chat?    @relation(fields: [chatId], references: [id])
   User      User?    @relation(fields: [userId], references: [id])
   Message   Message? @relation(fields: [messageId], references: [id])

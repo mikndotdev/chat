@@ -55,6 +55,7 @@ export async function addAttachment(data: FormData, chatId: string) {
 			url: url,
 			chat: { connect: { id: chatId } },
 			User: { connect: { id: claims.sub } },
+			filetype: file.type,
 		},
 	});
 

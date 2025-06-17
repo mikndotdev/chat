@@ -302,8 +302,11 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
 												return null;
 										}
 									})}
-									{message.attachment &&
-										renderAttachment(message.attachment)}
+									{message.experimental_attachments &&
+										message.experimental_attachments[0] &&
+										renderAttachment(
+											message.experimental_attachments[0],
+										)}
 								</div>
 							</motion.div>
 						);

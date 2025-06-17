@@ -79,15 +79,11 @@ export default async function Home({
 		content: message.content,
 		role: message.role as "user" | "assistant" | "system",
 		createdAt: message.createdAt,
-		attachment: message.attachments?.[0]
-			? {
-					url: message.attachments[0].url,
-					type:
-						message.attachments[0].url.split(".").pop() ||
-						"unknown",
-					name: `Attachment-${message.attachments[0].id}`,
-				}
-			: undefined,
+		experimental_attachments: message.attachments.map((attachment) => ({
+			id: attachment.id,
+			url: attachment.url,
+			contentType: attachment.filetype || "unknown",
+		})),
 	}));
 
 	return (
