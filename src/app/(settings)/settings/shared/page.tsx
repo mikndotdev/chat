@@ -1,56 +1,48 @@
-// src/app/(public)/share/[id]/page.tsx
 import { prisma } from "@/lib/prisma";
-import { ChatPage } from "@/components/chat";
-import { notFound } from "next/navigation";
-import AIIcon from "@/assets/img/ai.png";
+import { getLogtoContext } from "@logto/next/server-actions";
+import { logtoConfig } from "@/lib/auth";
 
-export default async function SharedChatPage({
-	params,
-}: { params: { id: string } }) {
-	const { id } = params;
+import { redirect } from "next/navigation";
 
-	// Fetch the chat and its messages
-	const chat = await prisma.chat.findUnique({
-		where: { id, public: true },
-		include: { messages: { orderBy: { createdAt: "asc" } } },
-	});
+export default async function Home() {
+    const { claims } = await getLogtoContext(logtoConfig);
 
-	if (!chat) {
-		return notFound();
-	}
+    if (!claims) {
+        await redirect("/login");
+    }
 
-	// Format messages to match the expected structure by ChatPage
-	const formattedMessages = chat.messages.map((msg) => ({
-		id: msg.id,
-		role: msg.role as "user" | "assistant" | "system",
-		content: msg.content,
-		parts: [{ type: "text", text: msg.content }],
-		attachment: msg.attachmentId
-			? {
-					url: msg.attachmentId,
-					name: msg.attachmentName || undefined,
-					contentType: msg.attachmentType || undefined,
-				}
-			: undefined,
-	}));
+    const userSharedChats = await prisma.chat.findMany({
+        where: { userId: claims?.sub, public: true },
+        orderBy: { createdAt: "desc" },
+    });
 
-	return (
-		<div className="container mx-auto flex flex-col h-screen">
-			<div className="bg-base-200 p-4 flex items-center">
-				<h1 className="text-2xl font-bold">
-					{chat.name || "Shared Chat"}
-				</h1>
-				<span className="ml-2 badge badge-primary">Read Only</span>
-			</div>
-
-			<div className="flex-grow overflow-hidden">
-				<ChatPage
-					id={id}
-					msg={formattedMessages}
-					avatar="/avatar-placeholder.png" // Default avatar for shared chats
-					status="ready"
-				/>
-			</div>
-		</div>
-	);
+    return (
+        <div className="container mx-auto p-4">
+            <h1 className={"text-base-content text-4xl mb-4"}>Shared Chats</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {userSharedChats.map((chat) => (
+                    <div
+                        key={chat.id}
+                        className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow duration-300"
+                    >
+                        <div className="card-body">
+                            <h2 className="card-title">
+                                {chat.name || "Untitled Chat"}
+                            </h2>
+                            <p className="text-base-content/70">
+                                Created at:{" "}
+                                {new Date(chat.createdAt).toLocaleDateString()}
+                            </p>
+                            <a
+                                href={`/chat/${chat.id}`}
+                                className="btn btn-primary mt-4"
+                            >
+                                Open Chat
+                            </a>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 }

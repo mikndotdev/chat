@@ -37,7 +37,7 @@ const ModelInfoFromID: Record<string, { name: string; description: string }> =
 export async function generateMetadata({
 	params,
 }: { params: Promise<{ id: string }> }) {
-	const id = (await params).id;
+	const { id } = await params;
 
 	const chat = await prisma.chat.findUnique({
 		where: { id },
