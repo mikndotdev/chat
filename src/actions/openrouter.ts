@@ -67,15 +67,15 @@ export async function addModel(name: string) {
 	return newModel;
 }
 
-export async function deleteModel(name: string) {
+export async function deleteModel(id: string) {
 	const { claims } = await getLogtoContext(logtoConfig);
 
 	if (!claims) {
 		throw new Error("User not authenticated");
 	}
 
-	const existingModel = await prisma.customProvider.findFirst({
-		where: { name, userId: claims.sub, type: "openrouter" },
+	const existingModel = await prisma.customProvider.findUnique({
+		where: { id },
 	});
 
 	if (!existingModel) {
