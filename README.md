@@ -12,6 +12,14 @@
 - Generate images
 - Attach files to your chats for models that support it
 - Integrate with your own infrastructure with Ollama
+- Fully open-source and does not require third-party services
+- Easily self-hostable with Docker
+
+## Tech Stack
+- Next.js 15 with daisyUI
+- Prisma with PostgreSQL
+- [Logto](https://logto.io)
+- Vercel AI SDK
 
 ## Installation
 
