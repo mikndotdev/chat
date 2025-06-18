@@ -197,9 +197,17 @@ export const OllamaModelList = ({ models }: OllamaListProps) => {
 								</span>
 							</>
 						) : (
-							<span className="badge badge-error">
-								Not Available
-							</span>
+							<>
+								<button
+									className="btn btn-sm btn-ghost mr-2"
+									onClick={() => removeModel(model.id)}
+								>
+									<X className="h-4 w-4" />
+								</button>
+								<span className="badge badge-error">
+									Not Available
+								</span>
+							</>
 						)}
 					</div>
 				</div>

@@ -126,7 +126,11 @@ export default async function SharePage({
 		<main className="container mx-auto p-4">
 			<ChatMeta
 				createdAt={chat.createdAt.toISOString()}
-				model={modelType === "ollama" ? "Selfhosted Model" : modelInfo?.name || chat.model || "Unknown Model"}
+				model={
+					modelType === "ollama"
+						? "Selfhosted Model"
+						: modelInfo?.name || chat.model || "Unknown Model"
+				}
 				title={chat.name || "Untitled Chat"}
 				id={id}
 				shared={chat.public}
