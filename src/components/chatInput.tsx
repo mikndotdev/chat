@@ -15,6 +15,7 @@ interface ChatInputProps {
 	models?: any[];
 	customModels?: any[];
 	openRouterModels?: any[];
+	ollamaModels?: any[];
 	openRouterEnabled?: boolean;
 	input?: string;
 	handleInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -31,6 +32,7 @@ export const ChatInput = ({
 	status,
 	openRouterModels,
 	openRouterEnabled,
+	ollamaModels = [],
 }: ChatInputProps) => {
 	const pathname = usePathname();
 	const router = useRouter();
@@ -42,6 +44,8 @@ export const ChatInput = ({
 	const [uploading, setUploading] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [tab, setTab] = useState("providers");
+
+	console.log(ollamaModels);
 
 	const chatId = pathname.startsWith("/chat/")
 		? pathname.split("/chat/")[1]?.split("/")[0]
@@ -296,9 +300,89 @@ export const ChatInput = ({
 								)}
 								{tab === "ollama" && (
 									<div className="col-span-2 flex flex-col items-center justify-center py-8">
-										<span className="text-base-content/70">
-											Custom providers coming soon.
-										</span>
+										{ollamaModels &&
+										ollamaModels.length > 0 ? (
+											<div className="w-full">
+												{ollamaModels.map((model) => (
+													<div
+														key={model.id}
+														className="mb-4"
+													>
+														<span className="text-base-content font-bold block mb-2">
+															{model.endpoint} -{" "}
+															{model.models
+																?.length ||
+																0}{" "}
+															Models
+														</span>
+														<div className="grid grid-cols-2 gap-2 w-full">
+															{model.models &&
+															model.models
+																.length > 0 ? (
+																model.models.map(
+																	(
+																		//@ts-ignore
+																		modelObj,
+																	) => (
+																		<div
+																			key={
+																				typeof modelObj ===
+																				"string"
+																					? modelObj
+																					: modelObj.id
+																			}
+																			className={`card bg-primary w-full flex items-center justify-start gap-3 ${
+																				selectedModel ===
+																				model.endpoint
+																					? "btn-active"
+																					: ""
+																			}`}
+																			onClick={() => {
+																				setSelectedModel(
+																					model.endpoint +
+																						" - " +
+																						(typeof modelObj ===
+																						"string"
+																							? modelObj
+																							: modelObj.id),
+																				);
+																				setModelType(
+																					"ollama",
+																				);
+																				setOpen(
+																					false,
+																				);
+																			}}
+																		>
+																			<div className="card-body p-3 justify-left w-full">
+																				<div className="card-title flex flex-row justify-center items-center space-x-2">
+																					<span className="font-semibold text-md text-base-content">
+																						{typeof modelObj ===
+																						"string"
+																							? modelObj
+																							: modelObj.id}
+																					</span>
+																				</div>
+																			</div>
+																		</div>
+																	),
+																)
+															) : (
+																<div className="col-span-2 text-center text-base-content/70">
+																	No models
+																	found on
+																	this server.
+																</div>
+															)}
+														</div>
+													</div>
+												))}
+											</div>
+										) : (
+											<span className="text-base-content/70">
+												No models available.
+											</span>
+										)}
 									</div>
 								)}
 							</div>

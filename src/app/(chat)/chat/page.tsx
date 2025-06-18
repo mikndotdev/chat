@@ -5,6 +5,15 @@ import { ChatInput } from "@/components/chatInput";
 import * as React from "react";
 import { prisma } from "@/lib/prisma";
 import models from "@/consts/models.json";
+import { validateOllamaHost } from "@/actions/ollama";
+
+//@ts-ignore
+interface OllamaModelWithStatus extends prisma.customProvider {
+	isAvailable: boolean;
+	endpoint: string;
+	models: string[];
+	id: string;
+}
 
 export default async function Home() {
 	const { claims } = await getLogtoContext(logtoConfig);
@@ -19,6 +28,43 @@ export default async function Home() {
 			type: "openrouter",
 		},
 	});
+
+	const ollamaHosts = await prisma.customProvider.findMany({
+		where: {
+			userId: claims?.sub || "",
+			type: "ollama",
+		},
+	});
+
+	const ollamaModels: OllamaModelWithStatus[] = [];
+
+	for (const host of ollamaHosts) {
+		if (!host.endpoint) {
+			ollamaModels.push({
+				...host,
+				endpoint: "",
+				isAvailable: false,
+				models: [],
+			});
+			continue;
+		}
+		try {
+			const hostInfo = await validateOllamaHost(host.endpoint);
+			ollamaModels.push({
+				...host,
+				endpoint: host.endpoint,
+				isAvailable: hostInfo.isValid,
+				models: hostInfo.models,
+			});
+		} catch (error) {
+			ollamaModels.push({
+				...host,
+				endpoint: host.endpoint,
+				isAvailable: false,
+				models: [],
+			});
+		}
+	}
 
 	const availableModels = Object.entries(models)
 		.filter(([providerKey]) =>
@@ -57,6 +103,7 @@ export default async function Home() {
 					status={"ready"}
 					openRouterModels={openRouterModels}
 					openRouterEnabled={!!openRouterKey}
+					ollamaModels={ollamaModels}
 				/>
 			</div>
 		</main>

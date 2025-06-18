@@ -10,6 +10,7 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createXai } from "@ai-sdk/xai";
 import { createGroq } from "@ai-sdk/groq";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { createOllama } from "ollama-ai-provider";
 import { streamText, generateId, createDataStream } from "ai";
 import Models from "@/consts/models.json";
 
@@ -79,6 +80,45 @@ export async function POST(req: NextRequest) {
 
 		const modelId = chatData.model;
 		const modelType = chatData.modelType;
+
+		if (modelType === "ollama") {
+			try {
+				const endpoint = modelId.split(" - ")[0];
+				const modelName = modelId.split(" - ")[1];
+				const provider = createOllama({ baseURL: `${endpoint}/api` });
+				const streamId = generateId();
+				await prisma.stream.create({
+					data: {
+						chatId: id,
+						streamId,
+					},
+				});
+
+				const result = streamText({
+					model: provider(modelName),
+					messages,
+					onFinish: async (message) => {
+						await addMessage({
+							message: {
+								content: message.text,
+								role: "assistant",
+							},
+							id,
+						});
+						await prisma.stream.deleteMany({
+							where: { streamId: streamId },
+						});
+					},
+				});
+				return result.toDataStreamResponse();
+			} catch (error) {
+				console.error("Error in Ollama chat:", error);
+				return new Response(
+					"Failed to connect to Ollama model. Please check the endpoint and model name.",
+					{ status: 500 },
+				);
+			}
+		}
 
 		if (modelType === "openrouter") {
 			const providerKey = await getUserORKey(claims?.sub);

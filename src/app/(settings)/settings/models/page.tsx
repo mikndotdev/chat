@@ -8,7 +8,18 @@ import { redirect } from "next/navigation";
 
 import { ModelCard } from "@/components/modelCard";
 import { OpenRouterModelList } from "@/components/OpenRouterModelList";
+import { OllamaModelList } from "@/components/OllamaModelList";
 import { OpenRouterBadge } from "@/components/OpenRouterConfigButton";
+
+import { validateOllamaHost } from "@/actions/ollama";
+
+//@ts-ignore
+interface OllamaModelWithStatus extends prisma.customProvider {
+	isAvailable: boolean;
+	endpoint: string;
+	modelCount: number;
+	id: string;
+}
 
 export default async function Home() {
 	const { claims } = await getLogtoContext(logtoConfig);
@@ -23,12 +34,12 @@ export default async function Home() {
 		},
 	});
 
-	const userOllamaModels = await prisma.customProvider.findMany({
+	let userOllamaModels = (await prisma.customProvider.findMany({
 		where: {
 			userId: claims?.sub,
 			type: "ollama",
 		},
-	});
+	})) as unknown as OllamaModelWithStatus[];
 
 	const userOpenRouterModels = await prisma.customProvider.findMany({
 		where: {
@@ -36,6 +47,16 @@ export default async function Home() {
 			type: "openrouter",
 		},
 	});
+
+	for (const model of userOllamaModels) {
+		try {
+			const hostInfo = await validateOllamaHost(model.endpoint);
+			model.isAvailable = hostInfo.isValid;
+			model.modelCount = hostInfo.modelCount;
+		} catch (error) {
+			model.isAvailable = false;
+		}
+	}
 
 	return (
 		<div className="container mx-auto p-4">
@@ -71,6 +92,9 @@ export default async function Home() {
 			<h2 className={"text-base-content text-xl mt-5 mb-2"}>
 				Custom Provider
 			</h2>
+			<div className="grid space-y-2">
+				<OllamaModelList models={userOllamaModels} />
+			</div>
 		</div>
 	);
 }
