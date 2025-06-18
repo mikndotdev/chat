@@ -209,7 +209,7 @@ export const OllamaModelList = ({ models }: OllamaListProps) => {
 				onClick={() => setOpen(true)}
 			>
 				<PlusCircle className="w-6 h-6 text-base-content" />
-				<h3 className="card-title text-base-content">Add a model</h3>
+				<h3 className="card-title text-base-content">Add a host</h3>
 			</div>
 		</div>
 	);

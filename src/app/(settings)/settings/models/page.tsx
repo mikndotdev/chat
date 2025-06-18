@@ -90,7 +90,7 @@ export default async function Home() {
 				<OpenRouterModelList models={userOpenRouterModels} />
 			</div>
 			<h2 className={"text-base-content text-xl mt-5 mb-2"}>
-				Custom Provider
+				Custom Providers (Ollama)
 			</h2>
 			<div className="grid space-y-2">
 				<OllamaModelList models={userOllamaModels} />
