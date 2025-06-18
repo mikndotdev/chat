@@ -12,9 +12,11 @@ export default function Home() {
 					Chat with your own models. All free and opensource.
 				</p>
 				<div className="mt-8">
-					<button className={"btn btn-secondary"}>
-						<Link href="/chat">Get Started</Link>
-					</button>
+					<Link href="/chat">
+						<button className={"btn btn-secondary"}>
+							Get Started
+						</button>
+					</Link>
 				</div>
 			</div>
 		</main>
