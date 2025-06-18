@@ -35,7 +35,7 @@ export default async function Home() {
 
 	return (
 		<main>
-			<div className="h-screen flex flex-col items-center justify-center text-center p-4">
+			<div className="min-h-screen flex flex-col items-center justify-center text-center p-4">
 				<h1 className="text-base-content font-bold text-4xl">
 					Image Playground
 				</h1>
