@@ -56,10 +56,11 @@ export async function generateMetadata({
 	}
 
 	const modelInfo = ModelInfoFromID[chat.model] || { name: "Unknown Model" };
+	const modelType = chat.modelType;
 
 	return {
 		title: `MD Chat - ${chat.name || "Untitled Chat"}`,
-		description: `Chat using ${modelInfo.name}. Read it on MD Chat!`,
+		description: `Chat using ${modelType === "ollama" ? "a selfhosted model" : modelInfo?.name || chat.model || "Unknown Model"}. Read it on MD Chat!`,
 	};
 }
 
@@ -107,6 +108,7 @@ export default async function SharePage({
 	);
 
 	const modelInfo = ModelInfoFromID[chat.model] || chat.model;
+	const modelType = chat.modelType;
 
 	const formattedMessages = messages.map((message) => ({
 		id: message.id,
@@ -124,7 +126,7 @@ export default async function SharePage({
 		<main className="container mx-auto p-4">
 			<ChatMeta
 				createdAt={chat.createdAt.toISOString()}
-				model={modelInfo?.name || chat.model || "Unknown Model"}
+				model={modelType === "ollama" ? "Selfhosted Model" : modelInfo?.name || chat.model || "Unknown Model"}
 				title={chat.name || "Untitled Chat"}
 				id={id}
 				shared={chat.public}
