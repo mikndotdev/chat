@@ -57,7 +57,7 @@
 			{
 				"name": "Grok 3",
 				"id": "grok-3",
-				"description": "xAI's flagship model that excels at enterprise tasks like data extraction, programming, and text summarization.",
+				"description": "xAI's previous flagship model.",
 				"type": "chat",
 				"price_per_1m_tokens": 15.0,
 				"available": true,
@@ -71,6 +71,17 @@
 				"description": "A lightweight model that thinks before responding. Excels at quantitative tasks that involve math and reasoning.",
 				"type": "chat",
 				"price_per_1m_tokens": 0.5,
+				"available": true,
+				"experimental": true,
+				"free_tier": false,
+				"supports_attachment": false
+			},
+			{
+				"name": "Grok 4",
+				"id": "grok-4-0709",
+				"description": "xAI's flagship model that excels at enterprise tasks like data extraction, programming, and text summarization.",
+				"type": "chat",
+				"price_per_1m_tokens": 15.0,
 				"available": true,
 				"experimental": true,
 				"free_tier": false,
