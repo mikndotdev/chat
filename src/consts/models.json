@@ -1,256 +1,256 @@
 {
-	"google": {
-		"name": "Google",
-		"description": "Google's AI models from Google AI Studio.",
-		"icon": "/icons/google.png",
-		"models": [
-			{
-				"name": "Gemini 2.5 Pro",
-				"id": "gemini-2.5-pro-preview-05-06",
-				"description": "State-of-the-art thinking model, capable of reasoning over complex problems in code, math, and STEM, as well as analyzing large datasets, codebases, and documents using long context.",
-				"type": "chat",
-				"price_per_1m_tokens": 15.0,
-				"available": true,
-				"experimental": true,
-				"supports_attachment": true
-			},
-			{
-				"name": "Gemini 2.5 Flash Thinking",
-				"id": "gemini-2.5-flash-preview-04-17",
-				"description": "Google's best model in terms of price-performance, offering well-rounded capabilities.",
-				"type": "chat",
-				"price_per_1m_tokens": 3.5,
-				"available": true,
-				"experimental": true,
-				"free_tier": true,
-				"supports_attachment": true
-			},
-			{
-				"name": "Gemini 2.0 Flash",
-				"id": "gemini-2.0-flash",
-				"description": "Gemini 2.0 Flash delivers next-gen features and improved capabilities, including superior speed, native tool use, and a 1M token context window.",
-				"type": "chat",
-				"price_per_1m_tokens": 0.4,
-				"available": true,
-				"experimental": false,
-				"free_tier": true,
-				"supports_attachment": true
-			},
-			{
-				"name": "Gemini 2.0 Flash Lite",
-				"id": "gemini-2.0-flash-lite",
-				"description": "A Gemini 2.0 Flash model optimized for cost efficiency and low latency.",
-				"type": "chat",
-				"price_per_1m_tokens": 0.3,
-				"available": true,
-				"experimental": false,
-				"free_tier": true,
-				"supports_attachment": true
-			}
-		]
-	},
-	"xai": {
-		"name": "xAI",
-		"description": "xAI's Grok models, as seen on X.",
-		"icon": "/icons/xai.jpeg",
-		"models": [
-			{
-				"name": "Grok 3",
-				"id": "grok-3",
-				"description": "xAI's previous flagship model.",
-				"type": "chat",
-				"price_per_1m_tokens": 15.0,
-				"available": true,
-				"experimental": true,
-				"free_tier": false,
-				"supports_attachment": false
-			},
-			{
-				"name": "Grok 3 Mini",
-				"id": "grok-3-mini",
-				"description": "A lightweight model that thinks before responding. Excels at quantitative tasks that involve math and reasoning.",
-				"type": "chat",
-				"price_per_1m_tokens": 0.5,
-				"available": true,
-				"experimental": true,
-				"free_tier": false,
-				"supports_attachment": false
-			},
-			{
-				"name": "Grok 4",
-				"id": "grok-4-0709",
-				"description": "xAI's flagship model that excels at enterprise tasks like data extraction, programming, and text summarization.",
-				"type": "chat",
-				"price_per_1m_tokens": 15.0,
-				"available": true,
-				"experimental": true,
-				"free_tier": false,
-				"supports_attachment": false
-			}
-		]
-	},
-	"openai": {
-		"name": "OpenAI",
-		"description": "OpenAI's AI models from OpenAI API.",
-		"icon": "/icons/openai.png",
-		"models": [
-			{
-				"name": "GPT-4.1",
-				"id": "gpt-4.1",
-				"description": "OpenAI's latest flagship GPT model for complex tasks.",
-				"type": "chat",
-				"price_per_1m_tokens": 8.0,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			},
-			{
-				"name": "GPT-4.1 Mini",
-				"id": "gpt-4.1-mini",
-				"description": "A smaller, cost-effective version of GPT-4.1, balanced for intelligence, speed, and cost",
-				"type": "chat",
-				"price_per_1m_tokens": 1.6,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			},
-			{
-				"name": "GPT-4.1 Nano",
-				"id": "gpt-4.1-nano",
-				"description": "An ultra-efficient version of GPT-4.1, designed for low-cost applications.",
-				"type": "chat",
-				"price_per_1m_tokens": 0.4,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			},
-			{
-				"name": "GPT-4o",
-				"id": "gpt-4o",
-				"description": "OpenAI's fast, intelligent, flexible GPT model",
-				"type": "chat",
-				"price_per_1m_tokens": 10.0,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			},
-			{
-				"name": "GPT-4o Mini",
-				"id": "gpt-4o-mini",
-				"description": "A smaller, cost-effective version of GPT-4o, designed for focused tasks",
-				"type": "chat",
-				"price_per_1m_tokens": 0.6,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			},
-			{
-				"name": "o3",
-				"id": "o3",
-				"description": "OpenAI's most powerful reasoning model",
-				"type": "chat",
-				"price_per_1m_tokens": 40.0,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			},
-			{
-				"name": "o4 Mini",
-				"id": "o4-mini",
-				"description": "OpenAI's new faster, more affordable reasoning model",
-				"type": "chat",
-				"price_per_1m_tokens": 4.4,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			}
-		]
-	},
-	"groq": {
-		"name": "Groq",
-		"description": "Fast AI inference for various open models.",
-		"icon": "/icons/groq.png",
-		"models": [
-			{
-				"name": "DeepSeek-R1-Distill-Llama-70B",
-				"id": "deepseek-r1-distill-llama-70b",
-				"description": "A distilled version of DeepSeek's R1 model, fine-tuned from the Llama-3.3-70B-Instruct base model.",
-				"type": "chat",
-				"price_per_1m_tokens": 1.0,
-				"available": true,
-				"experimental": true,
-				"free_tier": true,
-				"supports_attachment": false
-			},
-			{
-				"name": "Qwen QwQ 32B",
-				"id": "qwen-qwq-32b",
-				"description": "Qwen/QwQ-32B is a breakthrough 32-billion parameter reasoning model delivering performance comparable to state-of-the-art (SOTA) models 20x larger on complex reasoning and coding tasks.",
-				"type": "chat",
-				"price_per_1m_tokens": 0.4,
-				"available": true,
-				"experimental": true,
-				"free_tier": true,
-				"supports_attachment": false
-			}
-		]
-	},
-	"anthropic": {
-		"name": "Anthropic",
-		"description": "Anthropic's Claude models, known for their safety and reliability.",
-		"icon": "/icons/anthropic.jpeg",
-		"models": [
-			{
-				"name": "Claude 4 Opus",
-				"id": "claude-opus-4-0",
-				"description": "Anthropic's most capable model, boasting a high level of intelligence and capability.",
-				"type": "chat",
-				"price_per_1m_tokens": 15.0,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			},
-			{
-				"name": "Claude 4 Sonnet",
-				"id": "claude-sonnet-4-0",
-				"description": "Anthropic's latest model, with a good balance of performance and intelligence.",
-				"type": "chat",
-				"price_per_1m_tokens": 15.0,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			},
-			{
-				"name": "Claude 3.7 Sonnet",
-				"id": "claude-3-7-sonnet-latest",
-				"description": "Anthropic's high-performance model, with early extended thinking",
-				"type": "chat",
-				"price_per_1m_tokens": 15.0,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": true
-			},
-			{
-				"name": "Claude 3.5 Haiku",
-				"id": "claude-3-5-haiku-latest",
-				"description": "Anthropic's fastest, low-cost model, providing intelligence at blazing speeds.",
-				"type": "chat",
-				"price_per_1m_tokens": 4.0,
-				"available": true,
-				"experimental": false,
-				"free_tier": false,
-				"supports_attachment": false
-			}
-		]
-	}
+  "google": {
+    "name": "Google",
+    "description": "Google's AI models from Google AI Studio.",
+    "icon": "/icons/google.png",
+    "models": [
+      {
+        "name": "Gemini 2.5 Pro",
+        "id": "gemini-2.5-pro-preview-05-06",
+        "description": "State-of-the-art thinking model, capable of reasoning over complex problems in code, math, and STEM, as well as analyzing large datasets, codebases, and documents using long context.",
+        "type": "chat",
+        "price_per_1m_tokens": 15.0,
+        "available": true,
+        "experimental": true,
+        "supports_attachment": true
+      },
+      {
+        "name": "Gemini 2.5 Flash Thinking",
+        "id": "gemini-2.5-flash-preview-04-17",
+        "description": "Google's best model in terms of price-performance, offering well-rounded capabilities.",
+        "type": "chat",
+        "price_per_1m_tokens": 3.5,
+        "available": true,
+        "experimental": true,
+        "free_tier": true,
+        "supports_attachment": true
+      },
+      {
+        "name": "Gemini 2.0 Flash",
+        "id": "gemini-2.0-flash",
+        "description": "Gemini 2.0 Flash delivers next-gen features and improved capabilities, including superior speed, native tool use, and a 1M token context window.",
+        "type": "chat",
+        "price_per_1m_tokens": 0.4,
+        "available": true,
+        "experimental": false,
+        "free_tier": true,
+        "supports_attachment": true
+      },
+      {
+        "name": "Gemini 2.0 Flash Lite",
+        "id": "gemini-2.0-flash-lite",
+        "description": "A Gemini 2.0 Flash model optimized for cost efficiency and low latency.",
+        "type": "chat",
+        "price_per_1m_tokens": 0.3,
+        "available": true,
+        "experimental": false,
+        "free_tier": true,
+        "supports_attachment": true
+      }
+    ]
+  },
+  "xai": {
+    "name": "xAI",
+    "description": "xAI's Grok models, as seen on X.",
+    "icon": "/icons/xai.jpeg",
+    "models": [
+      {
+        "name": "Grok 3",
+        "id": "grok-3",
+        "description": "xAI's previous flagship model.",
+        "type": "chat",
+        "price_per_1m_tokens": 15.0,
+        "available": true,
+        "experimental": true,
+        "free_tier": false,
+        "supports_attachment": false
+      },
+      {
+        "name": "Grok 3 Mini",
+        "id": "grok-3-mini",
+        "description": "A lightweight model that thinks before responding. Excels at quantitative tasks that involve math and reasoning.",
+        "type": "chat",
+        "price_per_1m_tokens": 0.5,
+        "available": true,
+        "experimental": true,
+        "free_tier": false,
+        "supports_attachment": false
+      },
+      {
+        "name": "Grok 4",
+        "id": "grok-4-0709",
+        "description": "xAI's flagship model that excels at enterprise tasks like data extraction, programming, and text summarization.",
+        "type": "chat",
+        "price_per_1m_tokens": 15.0,
+        "available": true,
+        "experimental": true,
+        "free_tier": false,
+        "supports_attachment": false
+      }
+    ]
+  },
+  "openai": {
+    "name": "OpenAI",
+    "description": "OpenAI's AI models from OpenAI API.",
+    "icon": "/icons/openai.png",
+    "models": [
+      {
+        "name": "GPT-4.1",
+        "id": "gpt-4.1",
+        "description": "OpenAI's latest flagship GPT model for complex tasks.",
+        "type": "chat",
+        "price_per_1m_tokens": 8.0,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      },
+      {
+        "name": "GPT-4.1 Mini",
+        "id": "gpt-4.1-mini",
+        "description": "A smaller, cost-effective version of GPT-4.1, balanced for intelligence, speed, and cost",
+        "type": "chat",
+        "price_per_1m_tokens": 1.6,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      },
+      {
+        "name": "GPT-4.1 Nano",
+        "id": "gpt-4.1-nano",
+        "description": "An ultra-efficient version of GPT-4.1, designed for low-cost applications.",
+        "type": "chat",
+        "price_per_1m_tokens": 0.4,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      },
+      {
+        "name": "GPT-4o",
+        "id": "gpt-4o",
+        "description": "OpenAI's fast, intelligent, flexible GPT model",
+        "type": "chat",
+        "price_per_1m_tokens": 10.0,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      },
+      {
+        "name": "GPT-4o Mini",
+        "id": "gpt-4o-mini",
+        "description": "A smaller, cost-effective version of GPT-4o, designed for focused tasks",
+        "type": "chat",
+        "price_per_1m_tokens": 0.6,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      },
+      {
+        "name": "o3",
+        "id": "o3",
+        "description": "OpenAI's most powerful reasoning model",
+        "type": "chat",
+        "price_per_1m_tokens": 40.0,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      },
+      {
+        "name": "o4 Mini",
+        "id": "o4-mini",
+        "description": "OpenAI's new faster, more affordable reasoning model",
+        "type": "chat",
+        "price_per_1m_tokens": 4.4,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      }
+    ]
+  },
+  "groq": {
+    "name": "Groq",
+    "description": "Fast AI inference for various open models.",
+    "icon": "/icons/groq.png",
+    "models": [
+      {
+        "name": "DeepSeek-R1-Distill-Llama-70B",
+        "id": "deepseek-r1-distill-llama-70b",
+        "description": "A distilled version of DeepSeek's R1 model, fine-tuned from the Llama-3.3-70B-Instruct base model.",
+        "type": "chat",
+        "price_per_1m_tokens": 1.0,
+        "available": true,
+        "experimental": true,
+        "free_tier": true,
+        "supports_attachment": false
+      },
+      {
+        "name": "Qwen QwQ 32B",
+        "id": "qwen-qwq-32b",
+        "description": "Qwen/QwQ-32B is a breakthrough 32-billion parameter reasoning model delivering performance comparable to state-of-the-art (SOTA) models 20x larger on complex reasoning and coding tasks.",
+        "type": "chat",
+        "price_per_1m_tokens": 0.4,
+        "available": true,
+        "experimental": true,
+        "free_tier": true,
+        "supports_attachment": false
+      }
+    ]
+  },
+  "anthropic": {
+    "name": "Anthropic",
+    "description": "Anthropic's Claude models, known for their safety and reliability.",
+    "icon": "/icons/anthropic.jpeg",
+    "models": [
+      {
+        "name": "Claude 4 Opus",
+        "id": "claude-opus-4-0",
+        "description": "Anthropic's most capable model, boasting a high level of intelligence and capability.",
+        "type": "chat",
+        "price_per_1m_tokens": 15.0,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      },
+      {
+        "name": "Claude 4 Sonnet",
+        "id": "claude-sonnet-4-0",
+        "description": "Anthropic's latest model, with a good balance of performance and intelligence.",
+        "type": "chat",
+        "price_per_1m_tokens": 15.0,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      },
+      {
+        "name": "Claude 3.7 Sonnet",
+        "id": "claude-3-7-sonnet-latest",
+        "description": "Anthropic's high-performance model, with early extended thinking",
+        "type": "chat",
+        "price_per_1m_tokens": 15.0,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": true
+      },
+      {
+        "name": "Claude 3.5 Haiku",
+        "id": "claude-3-5-haiku-latest",
+        "description": "Anthropic's fastest, low-cost model, providing intelligence at blazing speeds.",
+        "type": "chat",
+        "price_per_1m_tokens": 4.0,
+        "available": true,
+        "experimental": false,
+        "free_tier": false,
+        "supports_attachment": false
+      }
+    ]
+  }
 }

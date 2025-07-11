@@ -1,18 +1,18 @@
+import type * as React from 'react';
 import {
-	SidebarProvider,
-	SidebarInset,
-	SidebarTrigger,
-} from "@/components/animate-ui/radix/sidebar";
-import * as React from "react";
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/animate-ui/radix/sidebar';
 
 export default async function ShareLayout({
-	children,
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	return (
-		<SidebarProvider>
-			<SidebarInset>{children}</SidebarInset>
-		</SidebarProvider>
-	);
+  return (
+    <SidebarProvider>
+      <SidebarInset>{children}</SidebarInset>
+    </SidebarProvider>
+  );
 }
