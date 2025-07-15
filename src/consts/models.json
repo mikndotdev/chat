@@ -199,6 +199,17 @@
         "experimental": true,
         "free_tier": true,
         "supports_attachment": false
+      },
+      {
+        "name": "Qwen QwQ 32B",
+        "id": "moonshotai/kimi-k2-instruct",
+        "description": "Kimi K2 is Moonshot AI's state-of-the-art Mixture-of-Experts (MoE) language model with 1 trillion total parameters and 32 billion activated parameters. Designed for agentic intelligence, it excels at tool use, coding, and autonomous problem-solving across diverse domains.",
+        "type": "chat",
+        "price_per_1m_tokens": 4.0,
+        "available": true,
+        "experimental": true,
+        "free_tier": true,
+        "supports_attachment": false
       }
     ]
   },
