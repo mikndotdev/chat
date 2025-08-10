@@ -61,7 +61,7 @@ async function generate(
 
 const ModelInfoFromID: Record<string, { name: string; description: string }> =
   Object.entries(Models)
-    .flatMap(([providerKey, provider]) =>
+    .flatMap(([_providerKey, provider]) =>
       provider.models.map(
         (model) =>
           [

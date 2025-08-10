@@ -1,6 +1,5 @@
 import { getLogtoContext } from '@logto/next/server-actions';
 import Link from 'next/link';
-import * as React from 'react';
 import { ImageGenerator } from '@/components/imageGenerator';
 import models from '@/consts/image_models.json' with { type: 'json' };
 import { logtoConfig } from '@/lib/auth';

@@ -27,13 +27,15 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
       await deleteModel(id);
       setModelsList((prev) => prev.filter((model) => model.id !== id));
       toast.success('Model removed successfully!');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to remove model. Please try again.');
     }
   };
 
   const add = async () => {
-    if (!name) return;
+    if (!name) {
+      return;
+    }
     try {
       await addModel(name);
       setName('');
@@ -42,7 +44,7 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
       toast.success('Model added successfully!');
       const updatedModels = await getModel(name);
       // @ts-expect-error
-      if (updatedModels && updatedModels.data.name) {
+      if (updatedModels?.data.name) {
         setModelsList((prev) => [
           ...prev,
           {
@@ -55,7 +57,7 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
           },
         ]);
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to add model. Please try again.');
     }
   };
@@ -72,12 +74,12 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
         try {
           const model = await getModel(name);
           //@ts-expect-error
-          if (model && model.data.name) {
+          if (model?.data.name) {
             setModelInfo(model);
           } else {
             setModelInfo(null);
           }
-        } catch (err) {
+        } catch (_err) {
           setModelInfo(null);
         } finally {
           setLoading(false);
@@ -89,7 +91,7 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
       clearTimeout(handler);
       setLoading(false);
     };
-  }, [name, modelsList]);
+  }, [name]);
 
   return (
     <div className="space-y-2">
@@ -110,7 +112,7 @@ export const OpenRouterModelList = ({ models }: OpenRouterModelListProps) => {
                 <span className="loading loading-spinner text-center" />
               </div>
               /* @ts-expect-error */
-            ) : modelInfo && modelInfo.data.name ? (
+            ) : modelInfo?.data.name ? (
               <div className="w-full">
                 <h3 className="mb-2 font-bold">
                   {/* @ts-ignore */}

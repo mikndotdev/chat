@@ -24,7 +24,7 @@ export const ImageGenerator = ({ models }: { models: any[] }) => {
         count,
       });
       setImages(generatedImages.map((image: any) => image.url));
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to generate images. Please try again.');
     } finally {
       setLoading(false);

@@ -6,7 +6,7 @@ import { logtoConfig } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 const ModelNameToId: Record<string, string> = Object.entries(Models)
-  .flatMap(([providerKey, provider]) =>
+  .flatMap(([_providerKey, provider]) =>
     provider.models.map((model) => [model.name, model.id])
   )
   .reduce((acc, [name, id]) => ({ ...acc, [name]: id }), {});

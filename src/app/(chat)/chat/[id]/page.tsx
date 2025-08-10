@@ -1,6 +1,5 @@
 import { getLogtoContext } from '@logto/next/server-actions';
 import { notFound, redirect } from 'next/navigation';
-import * as React from 'react';
 import { ChatContainer } from '@/components/chatContainer';
 import { ChatMeta } from '@/components/chatMeta';
 import Models from '@/consts/models.json' with { type: 'json' };
@@ -9,7 +8,7 @@ import { prisma } from '@/lib/prisma';
 
 const ModelInfoFromID: Record<string, { name: string; description: string }> =
   Object.entries(Models)
-    .flatMap(([providerKey, provider]) =>
+    .flatMap(([_providerKey, provider]) =>
       provider.models.map(
         (model) =>
           [
@@ -101,7 +100,6 @@ export default async function Home({
           //@ts-expect-error
           initialMessages={formattedMessages}
           model={chat.model}
-          //@ts-expect-error
           models={modelsArray}
         />
       </div>

@@ -24,17 +24,16 @@ export const ModelCard = ({
 }: ModelCardProps) => {
   const [key, setKey] = useState(apiKey || '');
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
   const [configuredState, setConfiguredState] = useState(configured);
 
   const set = async (id: string) => {
     try {
-      console.log(id, key);
       await setApiKey({ provider: id, key });
       toast.success(`API Key for ${name} set successfully!`);
       setConfiguredState(true);
       setOpen(false);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to set API Key. Please try again.');
     }
   };
@@ -45,7 +44,7 @@ export const ModelCard = ({
       toast.success(`API Key for ${name} removed successfully!`);
       setConfiguredState(false);
       setOpen(false);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to remove API Key. Please try again.');
     }
   };

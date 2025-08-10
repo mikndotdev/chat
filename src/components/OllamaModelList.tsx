@@ -33,7 +33,7 @@ export const OllamaModelList = ({ models }: OllamaListProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(false);
-  const [modelCount, setModelCount] = useState(0);
+  const [_modelCount, setModelCount] = useState(0);
   const [modelInfo, setModelInfo] = useState<ModelInfo | null>(null);
   const [modelsList, setModelsList] = useState<OllamaHost[]>(models || []);
 
@@ -42,13 +42,15 @@ export const OllamaModelList = ({ models }: OllamaListProps) => {
       await deleteModel(id);
       setModelsList((prev) => prev.filter((model) => model.id !== id));
       toast.success('Model removed successfully!');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to remove model. Please try again.');
     }
   };
 
   const add = async () => {
-    if (!name) return;
+    if (!name) {
+      return;
+    }
     try {
       const updatedModel = await addModel(name);
       const modelCount = modelInfo ? modelInfo.modelCount : 0;
@@ -67,7 +69,7 @@ export const OllamaModelList = ({ models }: OllamaListProps) => {
           },
         ]);
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to add model. Please try again.');
     }
   };
@@ -95,7 +97,7 @@ export const OllamaModelList = ({ models }: OllamaListProps) => {
             setValid(false);
             setModelCount(0);
           }
-        } catch (err) {
+        } catch (_err) {
           setModelInfo(null);
           setValid(false);
           setModelCount(0);
@@ -129,7 +131,7 @@ export const OllamaModelList = ({ models }: OllamaListProps) => {
               <div className="flex flex-col items-center justify-center">
                 <span className="loading loading-spinner text-center" />
               </div>
-            ) : modelInfo && modelInfo.isValid ? (
+            ) : modelInfo?.isValid ? (
               <div className="w-full">
                 <h3 className="mb-2 font-bold">
                   Available Models: {modelInfo.modelCount}

@@ -85,7 +85,9 @@ const useToggle = (initialValue = false): [boolean, () => void] => {
 
 const useLockBodyScroll = (enabled = true) => {
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) {
+      return;
+    }
 
     const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = 'hidden';

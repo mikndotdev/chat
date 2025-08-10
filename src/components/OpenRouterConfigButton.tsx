@@ -13,16 +13,16 @@ interface ModelCardProps {
 export const OpenRouterBadge = ({ configured, apiKey }: ModelCardProps) => {
   const [key, setKey] = useState(apiKey || '');
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
   const [configuredState, setConfiguredState] = useState(configured);
 
-  const set = async (id: string) => {
+  const set = async (_id: string) => {
     try {
       await setApiKey({ provider: 'openrouter', key });
       toast.success('API Key for OpenRouter set successfully!');
       setConfiguredState(true);
       setOpen(false);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to set API Key. Please try again.');
     }
   };
@@ -33,7 +33,7 @@ export const OpenRouterBadge = ({ configured, apiKey }: ModelCardProps) => {
       toast.success('API Key for OpenRouter removed successfully!');
       setConfiguredState(false);
       setOpen(false);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to remove API Key. Please try again.');
     }
   };
