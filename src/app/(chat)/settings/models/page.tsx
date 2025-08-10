@@ -49,7 +49,7 @@ export default async function Home() {
       const hostInfo = await validateOllamaHost(model.endpoint);
       model.isAvailable = hostInfo.isValid;
       model.modelCount = hostInfo.modelCount;
-    } catch (error) {
+    } catch (_error) {
       model.isAvailable = false;
     }
   }

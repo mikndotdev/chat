@@ -59,17 +59,19 @@ export const ChatContainer = ({
   const [internalStatus, setInternalStatus] = useState<ChatStatus>('ready');
   const [isInitialized, setIsInitialized] = useState(false);
 
-  console.log(isPublic);
-
   const handleFormSubmit = async (e: FormEvent, extra?: any) => {
-    if (isPublic) return;
+    if (isPublic) {
+      return;
+    }
     e.preventDefault();
 
     const form = e.target as HTMLFormElement;
     const input = form.querySelector('input') as HTMLInputElement;
     const message = input.value.trim();
 
-    if (!message) return;
+    if (!message) {
+      return;
+    }
 
     try {
       const messageData = {
@@ -92,12 +94,13 @@ export const ChatContainer = ({
         await handleSubmit(e);
       }
 
-      if (input) input.value = '';
+      if (input) {
+        input.value = '';
+      }
       if (handleInputChange) {
         handleInputChange({ target: { value: '' } } as any);
       }
-    } catch (error) {
-      console.error('Error sending message:', error);
+    } catch (_error) {
       toast.error('Failed to send message');
     }
   };
@@ -126,43 +129,48 @@ export const ChatContainer = ({
         setMessages(processedMessages as any);
       }
     }
-  }, [initialMessages, isInitialized, append, setMessages]);
+  }, [initialMessages, isInitialized, append, setMessages, isPublic]);
 
   useEffect(() => {
-    if (isPublic) return;
+    if (isPublic) {
+      return;
+    }
     if (internalStatus !== 'error' || status === 'error') {
       setInternalStatus(status);
     }
-  }, [status]);
+  }, [status, internalStatus, isPublic]);
 
   useEffect(() => {
-    if (isPublic) return;
+    if (isPublic) {
+      return;
+    }
     if (
       messages.length > 0 &&
-      messages[messages.length - 1].role === 'user' &&
+      messages.at(-1).role === 'user' &&
       internalStatus !== 'streaming' &&
       internalStatus !== 'submitted'
     ) {
       const timer = setTimeout(() => {
         if (
           messages.length > 0 &&
-          messages[messages.length - 1].role === 'user' &&
+          messages.at(-1).role === 'user' &&
           //@ts-expect-error
           internalStatus !== 'streaming' &&
           //@ts-expect-error
           internalStatus !== 'submitted'
         ) {
-          console.log('Detected unresponded message, setting error state');
           setInternalStatus('error');
         }
       }, 1500);
 
       return () => clearTimeout(timer);
     }
-  }, [messages, internalStatus]);
+  }, [messages, internalStatus, isPublic]);
 
   const handleRetry = () => {
-    if (isPublic) return;
+    if (isPublic) {
+      return;
+    }
     setRetryCount((prev) => prev + 1);
     setInternalStatus('ready');
 

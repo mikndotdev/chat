@@ -17,19 +17,15 @@ export const validateOllamaHost = async (host: string) => {
       throw new Error('Invalid Ollama host');
     }
     const data = await response.json();
-    // @ts-expect-error
-    if (!(data && data.data)) {
+    if (!data?.data) {
       throw new Error('No data returned from Ollama host');
     }
     return {
       isValid: true,
-      // @ts-expect-error
       modelCount: data.data.length,
-      // @ts-expect-error
       models: data.data,
     };
-  } catch (error) {
-    console.error('Error validating Ollama host:', error);
+  } catch (_error) {
     return {
       isValid: false,
       modelCount: 0,

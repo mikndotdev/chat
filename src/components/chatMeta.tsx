@@ -42,7 +42,7 @@ export function ChatMeta({
         setIsShared(true);
         toast.success('Chat shared successfully!');
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to toggle chat sharing. Please try again.');
     }
   };
@@ -58,7 +58,7 @@ export function ChatMeta({
       setInput('');
       setOpen(false);
       toast.success('Chat renamed successfully!');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to rename chat. Please try again.');
     }
     setOpen(false);
@@ -72,7 +72,7 @@ export function ChatMeta({
       setTimeout(() => {
         window.location.href = '/chat';
       }, 1000);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to delete chat. Please try again.');
     }
   };
@@ -107,41 +107,39 @@ export function ChatMeta({
       </dialog>
       <div className={'mb-2 flex flex-row items-center'}>
         <h1 className="font-bold text-2xl">{name}</h1>
-        <>
-          {!isPublic && (
-            <>
+        {!isPublic && (
+          <>
+            <button
+              className="btn btn-ghost btn-sm ml-2"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              <Edit className="h-4 w-4" />
+            </button>
+            <button
+              className="btn btn-ghost btn-sm ml-2"
+              onClick={() => {
+                handleDelete();
+              }}
+            >
+              <Trash className="h-4 w-4" />
+            </button>
+            {isShared && (
               <button
                 className="btn btn-ghost btn-sm ml-2"
                 onClick={() => {
-                  setOpen(true);
+                  navigator.clipboard.writeText(
+                    `${window.location.origin}/share/${id}`
+                  );
+                  toast.success('Share link copied to clipboard!');
                 }}
               >
-                <Edit className="h-4 w-4" />
+                <Link className="h-4 w-4" />
               </button>
-              <button
-                className="btn btn-ghost btn-sm ml-2"
-                onClick={() => {
-                  handleDelete();
-                }}
-              >
-                <Trash className="h-4 w-4" />
-              </button>
-              {isShared && (
-                <button
-                  className="btn btn-ghost btn-sm ml-2"
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      `${window.location.origin}/share/${id}`
-                    );
-                    toast.success('Share link copied to clipboard!');
-                  }}
-                >
-                  <Link className="h-4 w-4" />
-                </button>
-              )}
-            </>
-          )}
-        </>
+            )}
+          </>
+        )}
         {!isPublic && (
           <div className="ml-2 flex items-center">
             <button

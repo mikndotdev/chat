@@ -5,7 +5,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { createXai } from '@ai-sdk/xai';
 import { getLogtoContext } from '@logto/next/server-actions';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { createDataStream, generateId, streamText } from 'ai';
+import { generateId, streamText } from 'ai';
 import { headers } from 'next/headers';
 import { after, type NextRequest } from 'next/server';
 import { createOllama } from 'ollama-ai-provider';
@@ -17,7 +17,7 @@ import { prisma } from '@/lib/prisma';
 
 export const maxDuration = 30;
 
-const streamContext = createResumableStreamContext({
+const _streamContext = createResumableStreamContext({
   waitUntil: after,
 });
 
@@ -69,12 +69,17 @@ export async function POST(req: NextRequest) {
       return new Response('User not authenticated.', { status: 401 });
     }
 
-    if (!id) return new Response('Chat not found.', { status: 404 });
+    if (!id) {
+      return new Response('Chat not found.', { status: 404 });
+    }
 
     const chatData = await prisma.chat.findUnique({ where: { id } });
-    if (!chatData) return new Response('Chat not found.', { status: 404 });
-    if (chatData.userId !== claims?.sub)
+    if (!chatData) {
       return new Response('Chat not found.', { status: 404 });
+    }
+    if (chatData.userId !== claims?.sub) {
+      return new Response('Chat not found.', { status: 404 });
+    }
 
     const modelId = chatData.model;
     const modelType = chatData.modelType;
@@ -109,8 +114,7 @@ export async function POST(req: NextRequest) {
           },
         });
         return result.toDataStreamResponse();
-      } catch (error) {
-        console.error('Error in Ollama chat:', error);
+      } catch (_error) {
         return new Response(
           'Failed to connect to Ollama model. Please check the endpoint and model name.',
           { status: 500 }
@@ -154,16 +158,18 @@ export async function POST(req: NextRequest) {
     }
 
     const providerKey = getProviderKeyFromModelId(modelId);
-    if (!providerKey)
+    if (!providerKey) {
       return new Response('Provider not found.', { status: 400 });
+    }
 
     const userKey = await prisma.apiKey.findFirst({
       where: { userId: claims.sub, providerId: providerKey },
     });
-    if (!userKey)
+    if (!userKey) {
       return new Response('API key not found for provider.', {
         status: 400,
       });
+    }
 
     const provider = createProviderInstance(providerKey, userKey.key);
 
@@ -196,7 +202,6 @@ export async function POST(req: NextRequest) {
 
     return result.toDataStreamResponse();
   } catch (error) {
-    console.error('Error in chat API:', error);
     return new Response(
       JSON.stringify({
         error: 'An error occurred while processing your request.',

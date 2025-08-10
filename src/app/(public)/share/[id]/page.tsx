@@ -2,7 +2,6 @@ import { getLogtoContext } from '@logto/next/server-actions';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import * as React from 'react';
 import Logo from '@/assets/img/mikan-vtube.svg';
 import UserIcon from '@/assets/img/user.png';
 import { ChatContainer } from '@/components/chatContainer';
@@ -13,7 +12,7 @@ import { prisma } from '@/lib/prisma';
 
 const ModelInfoFromID: Record<string, { name: string; description: string }> =
   Object.entries(Models)
-    .flatMap(([providerKey, provider]) =>
+    .flatMap(([_providerKey, provider]) =>
       provider.models.map(
         (model) =>
           [
@@ -46,7 +45,7 @@ export async function generateMetadata({
     },
   });
 
-  if (!(chat && chat.public)) {
+  if (!chat?.public) {
     return {
       title: 'Chat not found',
       description: 'The requested chat does not exist or is not public.',
@@ -87,7 +86,7 @@ export default async function SharePage({
     return notFound();
   }
 
-  if (chat.userId == claims?.sub) {
+  if (chat.userId === claims?.sub) {
     await redirect(`/chat/${id}`);
   }
 
@@ -143,7 +142,6 @@ export default async function SharePage({
           //@ts-expect-error
           initialMessages={formattedMessages}
           isPublic={true}
-          //@ts-expect-error
           model={chat.model}
           models={modelsArray}
         />
@@ -151,9 +149,7 @@ export default async function SharePage({
       <div className="card mt-8 flex w-full items-center bg-base-200 p-4 shadow-xl">
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center">
-            <p
-              className={'mr-2 font-bold text-base-content/70 text-sm text-xl'}
-            >
+            <p className={'mr-2 font-bold text-base-content/70 text-xl'}>
               Generated on
             </p>
             <Image

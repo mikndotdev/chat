@@ -35,13 +35,15 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
         block: 'end',
       });
     }
-  }, [msg, status]);
+  }, []);
 
-  const lastMsgId = msg.length > 0 ? msg[msg.length - 1].id : null;
+  const lastMsgId = msg.length > 0 ? msg.at(-1).id : null;
 
   //@ts-expect-error
   const renderAttachment = (attachment) => {
-    if (!attachment) return null;
+    if (!attachment) {
+      return null;
+    }
 
     if (
       attachment.url.includes('.jpg') ||
@@ -77,8 +79,7 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
   };
 
   const showLoadingMessage =
-    status === 'submitted' &&
-    (msg.length === 0 || msg[msg.length - 1].role === 'user');
+    status === 'submitted' && (msg.length === 0 || msg.at(-1).role === 'user');
 
   const showErrorMessage = status === 'error';
 
@@ -89,13 +90,14 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
   };
 
   const isUnrespondedUserMessage =
-    msg.length > 0 && msg[msg.length - 1].role === 'user' && status === 'error';
+    msg.length > 0 && msg.at(-1).role === 'user' && status === 'error';
 
   const extractReasoning = (
     parts: any[]
   ): { reasoning: string | null; cleanedParts: any[] } => {
-    if (!parts || parts.length === 0)
+    if (!parts || parts.length === 0) {
       return { reasoning: null, cleanedParts: parts };
+    }
 
     const cleanedParts = [];
     let reasoning: string | null = null;
@@ -258,8 +260,7 @@ export const ChatPage = ({ id, msg, avatar, status, onRetry }: ChatProps) => {
                         return null;
                     }
                   })}
-                  {message.experimental_attachments &&
-                    message.experimental_attachments[0] &&
+                  {message.experimental_attachments?.[0] &&
                     renderAttachment(message.experimental_attachments[0])}
                 </div>
               </motion.div>

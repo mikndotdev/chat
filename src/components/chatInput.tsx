@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { type FormEvent, useState } from 'react';
 import { toast } from 'sonner';
-import { addMessage, startChat } from '@/actions/chat';
+import { startChat } from '@/actions/chat';
 import { addAttachment } from '@/actions/upload';
 
 interface ChatInputProps {
@@ -45,8 +45,6 @@ export const ChatInput = ({
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState('providers');
 
-  console.log(ollamaModels);
-
   const chatId = pathname.startsWith('/chat/')
     ? pathname.split('/chat/')[1]?.split('/')[0]
     : null;
@@ -57,7 +55,9 @@ export const ChatInput = ({
   const sendMessage = async (e: FormEvent) => {
     e.preventDefault();
     const inputEl = e.currentTarget.querySelector('input');
-    if (!(inputEl && selectedModel)) return;
+    if (!(inputEl && selectedModel)) {
+      return;
+    }
     const message = inputEl.value.trim();
     if (!message) {
       return;
@@ -128,8 +128,7 @@ export const ChatInput = ({
 
         router.push(`/chat/${chat.id}`);
       }
-    } catch (error) {
-      console.error('Error sending message:', error);
+    } catch (_error) {
       toast.error('Failed to send message.');
     }
   };
@@ -217,47 +216,43 @@ export const ChatInput = ({
                 {tab === 'openrouter' && (
                   <div className="col-span-2 flex flex-col items-center justify-center py-8">
                     {openRouterEnabled ? (
-                      <>
-                        {openRouterModels && openRouterModels.length > 0 ? (
-                          <div className="grid w-full grid-cols-2 gap-2">
-                            {openRouterModels.map((model) => (
+                      openRouterModels && openRouterModels.length > 0 ? (
+                        <div className="grid w-full grid-cols-2 gap-2">
+                          {openRouterModels.map((model) => (
+                            <div
+                              className={`card flex w-full items-center justify-start gap-3 bg-primary ${selectedModel === model.name ? 'btn-active' : ''}`}
+                              key={model.id}
+                              onClick={() => {
+                                setSelectedModel(model.name);
+                                setModelType('openrouter');
+                                setOpen(false);
+                              }}
+                            >
                               <div
-                                className={`card flex w-full items-center justify-start gap-3 bg-primary ${selectedModel === model.name ? 'btn-active' : ''}`}
-                                key={model.id}
-                                onClick={() => {
-                                  setSelectedModel(model.name);
-                                  setModelType('openrouter');
-                                  setOpen(false);
-                                }}
+                                className={'card-body justify-left w-full p-3'}
                               >
                                 <div
                                   className={
-                                    'card-body justify-left w-full p-3'
+                                    'card-title flex flex-row items-center justify-center space-x-2'
                                   }
                                 >
-                                  <div
+                                  <span
                                     className={
-                                      'card-title flex flex-row items-center justify-center space-x-2'
+                                      'font-semibold text-base-content text-md'
                                     }
                                   >
-                                    <span
-                                      className={
-                                        'font-semibold text-base-content text-md'
-                                      }
-                                    >
-                                      {model.name}
-                                    </span>
-                                  </div>
+                                    {model.name}
+                                  </span>
                                 </div>
                               </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-base-content/70">
-                            no models available.
-                          </span>
-                        )}
-                      </>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-base-content/70">
+                          no models available.
+                        </span>
+                      )
                     ) : (
                       <span className="text-base-content/70">
                         OpenRouter is not configured. Please add your OpenRouter

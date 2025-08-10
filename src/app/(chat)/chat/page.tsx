@@ -1,6 +1,4 @@
 import { getLogtoContext } from '@logto/next/server-actions';
-import { redirect } from 'next/navigation';
-import * as React from 'react';
 import { validateOllamaHost } from '@/actions/ollama';
 import { ChatInput } from '@/components/chatInput';
 import models from '@/consts/models.json' with { type: 'json' };
@@ -56,7 +54,7 @@ export default async function Home() {
         isAvailable: hostInfo.isValid,
         models: hostInfo.models,
       });
-    } catch (error) {
+    } catch (_error) {
       ollamaModels.push({
         ...host,
         endpoint: host.endpoint,
